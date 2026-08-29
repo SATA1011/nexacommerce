@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="NexaCommerce.Api/NexaCommerce.Api.csproj" />
+</Solution>
