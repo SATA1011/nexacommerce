@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-NexaCommerce.Worker-6be5cc1b-d63f-418b-bb0d-3ebcc74a0d6d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexaCommerce.Application\NexaCommerce.Application.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Infrastructure\NexaCommerce.Infrastructure.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Messaging\NexaCommerce.Messaging.csproj" />
+  </ItemGroup>
+</Project>

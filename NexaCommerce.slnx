@@ -1,3 +1,22 @@
 <Solution>
   <Project Path="NexaCommerce.Api/NexaCommerce.Api.csproj" />
+  <Project Path="NexaCommerce.Application/NexaCommerce.Application.csproj" />
+  <Project Path="NexaCommerce.Common/NexaCommerce.Common.csproj" />
+  <Project Path="NexaCommerce.Contracts/NexaCommerce.Contracts.csproj" />
+  <Project Path="NexaCommerce.Data/NexaCommerce.Data.csproj" />
+  <Project Path="NexaCommerce.Domain/NexaCommerce.Domain.csproj" />
+  <Project Path="NexaCommerce.Infrastructure/NexaCommerce.Infrastructure.csproj" />
+  <Project Path="NexaCommerce.Messaging/NexaCommerce.Messaging.csproj" />
+  <Project Path="NexaCommerce.Repository/NexaCommerce.Repository.csproj" />
+  <Project Path="NexaCommerce.Security/NexaCommerce.Security.csproj" />
+  <Project Path="NexaCommerce.Worker/NexaCommerce.Worker.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/NexaCommerce.ContractTests/NexaCommerce.ContractTests.csproj" />
+    <Project Path="tests/NexaCommerce.E2ETests/NexaCommerce.E2ETests.csproj" />
+    <Project Path="tests/NexaCommerce.IntegrationTests/NexaCommerce.IntegrationTests.csproj" />
+    <Project Path="tests/NexaCommerce.UnitTests/NexaCommerce.UnitTests.csproj" />
+  </Folder>
 </Solution>
+
+
+
