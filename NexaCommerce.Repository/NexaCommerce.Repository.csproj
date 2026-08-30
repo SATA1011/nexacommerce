@@ -1,6 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexaCommerce.Common\NexaCommerce.Common.csproj" />
     <ProjectReference Include="..\NexaCommerce.Data\NexaCommerce.Data.csproj" />
     <ProjectReference Include="..\NexaCommerce.Domain\NexaCommerce.Domain.csproj" />
   </ItemGroup>

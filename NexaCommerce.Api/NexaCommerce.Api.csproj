@@ -13,6 +13,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NexaCommerce.Application\NexaCommerce.Application.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Contracts\NexaCommerce.Contracts.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Data\NexaCommerce.Data.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Domain\NexaCommerce.Domain.csproj" />
+    <ProjectReference Include="..\NexaCommerce.Repository\NexaCommerce.Repository.csproj" />
   </ItemGroup>
 
 </Project>
