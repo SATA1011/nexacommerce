@@ -1,27 +1,129 @@
+using System.Text;
 using Dapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using NexaCommerce.Api.Filters;
 using NexaCommerce.Data.Factories;
 using NexaCommerce.Data.Migrations;
 using NexaCommerce.Domain.Interfaces;
 using NexaCommerce.Repository.Identity;
+using NexaCommerce.Security.Cryptography;
+using NexaCommerce.Security.Options;
+using NexaCommerce.Security.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Dapper to map MySQL snake_case columns (e.g., first_name) to C# PascalCase properties (FirstName)
 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-// Add services to the container.
+// Connection String
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Register Connection Factory
+// Configure JwtOptions
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() 
+    ?? new JwtOptions();
+
+// Register Security & Infrastructure Services
 builder.Services.AddScoped<IDbConnectionFactory>(_ => new DbConnectionFactory(connectionString));
-
-// Register Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
+// Configure JWT Authentication with resilient token parsing
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtOptions.Issuer,
+        ValidAudience = jwtOptions.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var authHeader = context.Request.Headers.Authorization.ToString();
+            if (!string.IsNullOrEmpty(authHeader))
+            {
+                if (authHeader.StartsWith("Bearer Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Token = authHeader["Bearer Bearer ".Length..].Trim();
+                }
+                else if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Token = authHeader["Bearer ".Length..].Trim();
+                }
+                else
+                {
+                    context.Token = authHeader.Trim();
+                }
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Configure Swagger UI with Bearer Auth Scheme & Operation Filter
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "NexaCommerce API", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Paste your JWT access token below (without 'Bearer ' prefix):"
+    });
+
+    options.AddSecurityRequirement(doc =>
+    {
+        doc.Components ??= new OpenApiComponents();
+        doc.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+        if (!doc.Components.SecuritySchemes.ContainsKey("Bearer"))
+        {
+            doc.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header
+            };
+        }
+
+        var schemeRef = new OpenApiSecuritySchemeReference("Bearer", doc);
+        var req = new OpenApiSecurityRequirement
+        {
+            { schemeRef, new List<string>() }
+        };
+
+        doc.RegisterComponents();
+        return req;
+    });
+});
 
 var app = builder.Build();
 
@@ -46,6 +148,7 @@ app.UseSwaggerUI(options =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
