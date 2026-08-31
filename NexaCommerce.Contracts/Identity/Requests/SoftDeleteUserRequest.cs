@@ -1,6 +1,6 @@
 namespace NexaCommerce.Contracts.Identity.Requests;
 
-public class GetUserByIdRequestDto
+public class SoftDeleteUserRequest
 {
     public Guid Id { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace NexaCommerce.Contracts.Identity.Requests;
 
-public class GetUsersRequestDto
+public class GetRolesRequest
 {
     public string? SearchTerm { get; set; }
     public int PageNumber { get; set; } = 1;

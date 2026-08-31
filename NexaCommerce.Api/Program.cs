@@ -31,6 +31,9 @@ var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<Jw
 // Register Security & Infrastructure Services
 builder.Services.AddScoped<IDbConnectionFactory>(_ => new DbConnectionFactory(connectionString));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
@@ -97,32 +100,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Paste your JWT access token below (without 'Bearer ' prefix):"
     });
 
-    options.AddSecurityRequirement(doc =>
-    {
-        doc.Components ??= new OpenApiComponents();
-        doc.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-
-        if (!doc.Components.SecuritySchemes.ContainsKey("Bearer"))
-        {
-            doc.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header
-            };
-        }
-
-        var schemeRef = new OpenApiSecuritySchemeReference("Bearer", doc);
-        var req = new OpenApiSecurityRequirement
-        {
-            { schemeRef, new List<string>() }
-        };
-
-        doc.RegisterComponents();
-        return req;
-    });
+    options.OperationFilter<AuthorizeCheckOperationFilter>();
 });
 
 var app = builder.Build();
