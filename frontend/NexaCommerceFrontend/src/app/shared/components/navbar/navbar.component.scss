@@ -1,0 +1,416 @@
+@use 'variables' as *;
+
+.navbar-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid $border-color;
+  transition: all $transition-normal;
+
+  .navbar-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+
+    @media (min-width: 640px) {
+      padding: 0 24px;
+    }
+
+    @media (min-width: 1024px) {
+      padding: 0 32px;
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+  }
+
+  // Brand Logo
+  .brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+
+      &:hover {
+        .brand-icon {
+          transform: scale(1.05);
+        }
+      }
+
+      .brand-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: $radius-md;
+        background: linear-gradient(135deg, $color-brand-dark, $color-brand, $color-indigo);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $text-white;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        transition: transform $transition-fast;
+
+        .icon-svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+
+        .brand-title {
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          background: linear-gradient(90deg, #0f172a, #3730a3, #4f46e5);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .brand-subtitle {
+          font-size: 10px;
+          font-weight: 500;
+          color: $text-light;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-top: -3px;
+        }
+      }
+    }
+  }
+
+  // Desktop Navigation
+  .nav-links-desktop {
+    display: none;
+    align-items: center;
+    gap: 4px;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: $radius-sm;
+      font-size: 14px;
+      color: $text-secondary;
+      text-decoration: none;
+      transition: all $transition-fast;
+
+      &:hover {
+        color: $color-brand;
+        background-color: $bg-subtle;
+      }
+
+      &.active-nav {
+        background-color: $color-brand-light;
+        color: $color-brand;
+        font-weight: 600;
+      }
+
+      &.nav-portal {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .status-indicator {
+          width: 8px;
+          height: 8px;
+          border-radius: $radius-full;
+
+          &.seller {
+            background-color: $color-indigo;
+          }
+
+          &.admin {
+            background-color: $color-purple;
+          }
+        }
+      }
+
+      &.active-seller {
+        background-color: #eef2ff;
+        color: #4338ca;
+        font-weight: 600;
+      }
+
+      &.active-admin {
+        background-color: #faf5ff;
+        color: #7e22ce;
+        font-weight: 600;
+      }
+    }
+  }
+
+  // Desktop Action Bar
+  .action-bar-desktop {
+    display: none;
+    align-items: center;
+    gap: 12px;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+
+    .user-profile-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 14px;
+      border-left: 1px solid $border-color;
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+
+        .user-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        .roles-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 4px;
+          margin-top: 2px;
+
+          .role-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: $radius-xs;
+            background-color: $color-brand-subtle;
+            color: $color-brand-dark;
+          }
+        }
+      }
+
+      .avatar-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: $radius-full;
+        background-color: $bg-subtle;
+        border: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: $text-secondary;
+        font-size: 14px;
+      }
+
+      .signout-button {
+        padding: 8px;
+        border-radius: $radius-sm;
+        color: $text-light;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:hover {
+          color: $color-danger;
+          background-color: $color-danger-bg;
+        }
+
+        .signout-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .guest-signin-link {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-secondary;
+      text-decoration: none;
+      transition: color $transition-fast;
+
+      &:hover {
+        color: $color-brand;
+      }
+    }
+
+    .guest-seller-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: $color-brand;
+      background-color: $color-brand-light;
+      border: 1px solid $color-brand-subtle;
+      border-radius: $radius-sm;
+      text-decoration: none;
+      transition: background-color $transition-fast;
+
+      &:hover {
+        background-color: $color-brand-subtle;
+      }
+    }
+
+    .guest-register-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: $text-white;
+      background-color: $color-brand;
+      border-radius: $radius-sm;
+      box-shadow: $shadow-button;
+      text-decoration: none;
+      transition: background-color $transition-fast, transform $transition-fast;
+
+      &:hover {
+        background-color: $color-brand-hover;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Mobile Toggle Button
+  .mobile-menu-wrapper {
+    display: flex;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+
+    .mobile-menu-toggle {
+      padding: 8px;
+      border-radius: $radius-sm;
+      color: $text-secondary;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $bg-subtle;
+      }
+
+      .menu-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  // Mobile Dropdown
+  .mobile-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: $bg-card;
+    border-bottom: 1px solid $border-color;
+    padding: 12px 16px 16px 16px;
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+
+    .mobile-link {
+      display: block;
+      padding: 8px 12px;
+      border-radius: $radius-sm;
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-primary;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $bg-subtle;
+      }
+
+      &.seller {
+        color: $color-indigo;
+
+        &:hover {
+          background-color: $color-indigo-light;
+        }
+      }
+
+      &.admin {
+        color: $color-purple;
+
+        &:hover {
+          background-color: $color-purple-light;
+        }
+      }
+    }
+
+    .mobile-user-section {
+      padding-top: 12px;
+      margin-top: 8px;
+      border-top: 1px solid $border-color;
+
+      .mobile-auth-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 12px;
+
+        .mobile-user-email {
+          font-size: 13px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        .mobile-signout-btn {
+          font-size: 13px;
+          font-weight: 500;
+          color: $color-danger;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+        }
+      }
+
+      .mobile-guest-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding-top: 6px;
+
+        .mobile-btn-secondary {
+          display: block;
+          text-align: center;
+          padding: 8px 16px;
+          border: 1px solid $border-color;
+          border-radius: $radius-sm;
+          font-size: 13px;
+          font-weight: 500;
+          color: $text-primary;
+          text-decoration: none;
+        }
+
+        .mobile-btn-primary {
+          display: block;
+          text-align: center;
+          padding: 8px 16px;
+          background-color: $color-brand;
+          color: $text-white;
+          border-radius: $radius-sm;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}

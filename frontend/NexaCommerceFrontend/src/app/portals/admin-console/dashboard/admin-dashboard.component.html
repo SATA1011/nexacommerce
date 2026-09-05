@@ -1,0 +1,140 @@
+<div class="admin-container">
+  
+  <!-- Admin Banner -->
+  <div class="admin-banner">
+    <div>
+      <div class="admin-meta">
+        <span class="authority-badge">
+          Platform Master Authority
+        </span>
+        <span class="env-tag">Environment: Production (ASP.NET Core 10 + MySQL 8.4)</span>
+      </div>
+      <h1 class="banner-title">Platform Operations Console</h1>
+      <p class="banner-subtitle">
+        SuperAdmin / Operations Manager • Logged in as {{ authService.currentUser()?.email || 'admin@nexacommerce.internal' }}
+      </p>
+    </div>
+
+    <div class="banner-actions">
+      <div class="system-health-badge">
+        <span class="health-dot"></span>
+        <span>All Services Healthy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- High-Level Platform Statistics -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Marketplace GMV</span>
+        <span class="kpi-trend trend-purple">+24.8% MoM</span>
+      </div>
+      <div class="kpi-value">$1,420,850</div>
+      <p class="kpi-subtext">Platform Commission: $120,772.25</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Onboarded Merchants</span>
+        <span class="kpi-trend trend-emerald">3 Pending</span>
+      </div>
+      <div class="kpi-value">284</div>
+      <p class="kpi-subtext">Active storefronts selling</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Customer Accounts</span>
+        <span class="kpi-trend trend-indigo">+410 Today</span>
+      </div>
+      <div class="kpi-value">48,920</div>
+      <p class="kpi-subtext">Registered buyer base</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Active JWT Sessions</span>
+        <span class="kpi-trend trend-emerald">Secure</span>
+      </div>
+      <div class="kpi-value">3,892</div>
+      <p class="kpi-subtext">Zero security incidents detected</p>
+    </div>
+  </div>
+
+  <!-- Two Column Layout: Pending KYC/Store Approvals + System Architecture Health -->
+  <div class="dashboard-columns">
+    
+    <!-- Pending Merchant Onboarding Approvals -->
+    <div class="section-panel">
+      <div class="panel-header">
+        <div>
+          <h3 class="panel-title">Pending Merchant Applications</h3>
+          <p class="panel-subtitle">Review tax ID and business legitimacy before granting Vendor role</p>
+        </div>
+        <span class="pending-pill">3 Pending</span>
+      </div>
+
+      <div class="applications-list">
+        @for (app of pendingApplications; track app.id) {
+          <div class="app-row">
+            <div>
+              <div class="store-name">{{ app.storeName }}</div>
+              <div class="owner-info">{{ app.ownerName }} • {{ app.email }}</div>
+              <div class="tax-id">Tax ID: {{ app.taxNumber }}</div>
+            </div>
+
+            <div class="action-btns">
+              <button class="approve-btn">
+                Approve
+              </button>
+              <button class="review-btn">
+                Review
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Infrastructure & Observability Metrics -->
+    <div class="section-panel">
+      <h3 class="panel-title-bordered">
+        System & Infrastructure Telemetry
+      </h3>
+
+      <div class="telemetry-grid">
+        <div class="telemetry-card">
+          <span class="metric-label">MySQL Connection Pool</span>
+          <div class="metric-value">12 / 100</div>
+          <p class="metric-status healthy">Healthy latency: 1.2ms</p>
+        </div>
+
+        <div class="telemetry-card">
+          <span class="metric-label">Redis Cache Hit Rate</span>
+          <div class="metric-value">94.2%</div>
+          <p class="metric-status healthy">Catalog cached in RAM</p>
+        </div>
+
+        <div class="telemetry-card">
+          <span class="metric-label">RabbitMQ Message Queue</span>
+          <div class="metric-value">0 Lag</div>
+          <p class="metric-status info">Workers processing async</p>
+        </div>
+
+        <div class="telemetry-card">
+          <span class="metric-label">YARP Gateway Proxy</span>
+          <div class="metric-value">HTTP/2</div>
+          <p class="metric-status purple">Distributed Tracing Active</p>
+        </div>
+      </div>
+
+      <div class="roles-banner">
+        <span>Identity Roles & Permissions Database</span>
+        <span class="roles-link">Manage Roles API &rarr;</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

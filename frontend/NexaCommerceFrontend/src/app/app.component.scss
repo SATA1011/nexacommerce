@@ -1,0 +1,14 @@
+@use 'variables' as *;
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $bg-body;
+  color: $text-primary;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app-main {
+  flex: 1;
+}

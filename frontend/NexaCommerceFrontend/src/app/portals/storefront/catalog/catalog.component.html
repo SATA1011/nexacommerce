@@ -1,0 +1,134 @@
+<div class="catalog-container">
+  
+  <!-- Catalog Header -->
+  <div class="catalog-header">
+    <div class="header-titles">
+      <h1 class="catalog-title">Marketplace Catalog</h1>
+      <p class="catalog-subtitle">Browse approved listings from verified platform merchants</p>
+    </div>
+
+    <div class="controls-group">
+      <!-- Search input -->
+      <div class="search-box">
+        <input type="text"
+               [(ngModel)]="searchQuery"
+               placeholder="Search products, brands..."
+               class="search-input" />
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+
+      <!-- Sort selection -->
+      <select [(ngModel)]="sortBy" class="sort-select">
+        <option value="featured">Featured First</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Highest Rated</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Main Layout: Filters + Product Grid -->
+  <div class="catalog-layout">
+    
+    <!-- Filter Sidebar -->
+    <aside class="filters-sidebar">
+      <div class="filters-card">
+        <h3 class="filter-heading">Categories</h3>
+        <div class="filter-options">
+          @for (cat of filterCategories; track cat) {
+            <label class="filter-checkbox-label">
+              <input type="checkbox"
+                     [checked]="selectedCategory === cat"
+                     (change)="toggleCategory(cat)"
+                     class="checkbox-control" />
+              <span>{{ cat }}</span>
+            </label>
+          }
+        </div>
+
+        <div class="filter-divider">
+          <h3 class="filter-heading">Price Range</h3>
+          <div class="price-slider-group">
+            <div class="price-display">
+              <span>$0</span>
+              <span class="price-max">\${{ maxPrice }}</span>
+            </div>
+            <input type="range" min="10" max="2000" [(ngModel)]="maxPrice"
+                   class="price-slider" />
+          </div>
+        </div>
+
+        <div class="filter-divider">
+          <label class="stock-checkbox-label">
+            <input type="checkbox" [(ngModel)]="onlyInStock"
+                   class="checkbox-control" />
+            <span>In Stock Only</span>
+          </label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Product Cards Grid -->
+    <main class="products-main">
+      <div class="products-grid">
+        @for (product of filteredProducts(); track product.id) {
+          <div class="product-card group">
+            
+            <!-- Product Image Container -->
+            <div class="product-media">
+              <img [src]="product.imageUrl" [alt]="product.title" class="product-image" />
+              
+              @if (product.badge) {
+                <span class="badge-tag">
+                  {{ product.badge }}
+                </span>
+              }
+
+              <span class="merchant-tag">
+                {{ product.storeName }}
+              </span>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-info">
+              <div>
+                <span class="category-name">{{ product.category }}</span>
+                <h3 class="product-name">
+                  {{ product.title }}
+                </h3>
+
+                <!-- Ratings -->
+                <div class="rating-bar">
+                  <div class="stars">
+                    ★ ★ ★ ★ ★
+                  </div>
+                  <span class="rating-value">{{ product.rating }}</span>
+                  <span class="reviews-count">({{ product.reviewsCount }})</span>
+                </div>
+              </div>
+
+              <div class="product-bottom-row">
+                <div class="price-wrapper">
+                  <span class="current-price">\${{ product.price }}</span>
+                  @if (product.originalPrice) {
+                    <span class="original-price">\${{ product.originalPrice }}</span>
+                  }
+                </div>
+
+                <button class="add-to-cart-btn">
+                  Add to Cart
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        }
+      </div>
+    </main>
+
+  </div>
+
+</div>

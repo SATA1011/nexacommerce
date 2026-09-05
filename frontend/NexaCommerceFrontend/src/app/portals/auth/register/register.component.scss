@@ -1,0 +1,291 @@
+@use 'variables' as *;
+
+.register-container {
+  min-height: calc(100vh - 12rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+
+  @media (min-width: 640px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .register-card {
+    max-width: 520px;
+    width: 100%;
+    background-color: $bg-card;
+    padding: 32px;
+    border-radius: $radius-xl;
+    border: 1px solid $border-color;
+    box-shadow: $shadow-card;
+
+    @media (min-width: 640px) {
+      padding: 40px;
+    }
+
+    .register-header {
+      text-align: center;
+      margin-bottom: 24px;
+
+      .title {
+        font-size: 24px;
+        font-weight: 900;
+        color: $text-primary;
+        letter-spacing: -0.025em;
+        margin: 0;
+      }
+
+      .subtitle {
+        margin-top: 6px;
+        font-size: 13px;
+        color: $text-muted;
+      }
+    }
+
+    // Account Type Switcher Tabs
+    .tabs-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      padding: 6px;
+      background-color: $bg-subtle;
+      border-radius: $radius-lg;
+      margin-bottom: 24px;
+
+      .tab-button {
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: $radius-md;
+        border: none;
+        background: transparent;
+        color: $text-muted;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &.tab-active {
+          background-color: $bg-card;
+          color: $text-primary;
+          font-weight: 700;
+          box-shadow: $shadow-sm;
+        }
+
+        &:hover:not(.tab-active) {
+          color: $text-primary;
+        }
+      }
+    }
+
+    .alert-error {
+      padding: 14px;
+      border-radius: $radius-md;
+      background-color: $color-danger-bg;
+      border: 1px solid $color-danger-border;
+      color: $color-danger-text;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+
+      .alert-icon {
+        width: 16px;
+        height: 16px;
+        color: $color-danger;
+        flex-shrink: 0;
+      }
+    }
+
+    .alert-success {
+      padding: 14px;
+      border-radius: $radius-md;
+      background-color: $color-success-bg;
+      border: 1px solid $color-success-border;
+      color: $color-success-text;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+
+      .alert-icon {
+        width: 16px;
+        height: 16px;
+        color: $color-success;
+        flex-shrink: 0;
+      }
+    }
+
+    .register-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+
+        @media (min-width: 640px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+
+        .form-label {
+          font-size: 12px;
+          font-weight: 700;
+          color: $text-secondary;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 6px;
+        }
+
+        .form-input {
+          width: 100%;
+          padding: 10px 14px;
+          border-radius: $radius-md;
+          border: 1px solid $border-color;
+          font-size: 14px;
+          background-color: $bg-card;
+          box-shadow: $shadow-sm;
+          outline: none;
+          transition: border-color $transition-fast, box-shadow $transition-fast;
+
+          &:focus {
+            border-color: $color-brand;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+          }
+
+          &::placeholder {
+            color: $text-light;
+          }
+        }
+      }
+
+      // Merchant Store Details Section
+      .merchant-box {
+        padding: 16px;
+        background-color: #f5f3ff;
+        border: 1px solid #e0e7ff;
+        border-radius: $radius-lg;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+
+        .merchant-title {
+          font-size: 12px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: #3730a3;
+        }
+
+        .merchant-label {
+          font-size: 12px;
+          font-weight: 600;
+          color: $text-secondary;
+          margin-bottom: 4px;
+        }
+
+        .merchant-input {
+          width: 100%;
+          padding: 8px 14px;
+          border-radius: $radius-md;
+          border: 1px solid $border-color;
+          font-size: 14px;
+          background-color: $bg-card;
+          outline: none;
+          transition: border-color $transition-fast;
+
+          &:focus {
+            border-color: $color-indigo;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+          }
+        }
+
+        .merchant-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+
+          @media (min-width: 640px) {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      }
+
+      .submit-button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        border-radius: $radius-md;
+        background-color: $text-primary;
+        color: $text-white;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background-color $transition-fast, transform $transition-fast;
+
+        &:hover:not(:disabled) {
+          background-color: $color-brand;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .loading-spinner {
+          width: 16px;
+          height: 16px;
+          animation: spin 1s linear infinite;
+
+          .spinner-circle {
+            opacity: 0.25;
+          }
+
+          .spinner-path {
+            opacity: 0.75;
+          }
+        }
+      }
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid $border-color;
+      text-align: center;
+      font-size: 13px;
+      color: $text-muted;
+
+      .login-link {
+        font-weight: 600;
+        color: $color-brand;
+        text-decoration: none;
+        margin-left: 4px;
+
+        &:hover {
+          color: $color-brand-hover;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,374 @@
+@use 'variables' as *;
+
+.vendor-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @media (min-width: 640px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  // Merchant Portal Banner
+  .merchant-banner {
+    background: linear-gradient(135deg, #312e81 0%, #3730a3 50%, #0f172a 100%);
+    border-radius: $radius-xl;
+    padding: 24px;
+    color: $text-white;
+    box-shadow: $shadow-card;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @media (min-width: 640px) {
+      padding: 32px;
+    }
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .merchant-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      .merchant-badge {
+        padding: 2px 10px;
+        border-radius: $radius-full;
+        background-color: rgba(99, 102, 241, 0.3);
+        border: 1px solid rgba(129, 140, 248, 0.4);
+        color: #c7d2fe;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .commission-rate {
+        font-size: 12px;
+        color: #a5b4fc;
+      }
+    }
+
+    .banner-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin: 0;
+
+      @media (min-width: 640px) {
+        font-size: 28px;
+      }
+    }
+
+    .banner-subtitle {
+      font-size: 13px;
+      color: #c7d2fe;
+      margin-top: 4px;
+
+      .store-name {
+        font-weight: 600;
+        color: $text-white;
+      }
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .new-listing-btn {
+        padding: 10px 16px;
+        background-color: $color-indigo;
+        color: $text-white;
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: $radius-md;
+        border: none;
+        cursor: pointer;
+        box-shadow: $shadow-sm;
+        transition: background-color $transition-fast;
+
+        &:hover {
+          background-color: $color-brand;
+        }
+      }
+
+      .live-store-link {
+        padding: 10px 16px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $text-white;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: $radius-md;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-decoration: none;
+        transition: background-color $transition-fast;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+  }
+
+  // KPI Cards Grid
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .kpi-card {
+      padding: 24px;
+      background-color: $bg-card;
+      border-radius: $radius-lg;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-soft;
+
+      .kpi-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: $text-muted;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        .kpi-trend {
+          padding: 2px 8px;
+          border-radius: $radius-full;
+          font-size: 11px;
+
+          &.trend-up {
+            color: $color-success-text;
+            background-color: $color-success-bg;
+          }
+
+          &.trend-warn {
+            color: $color-warning-text;
+            background-color: $color-warning-bg;
+          }
+
+          &.trend-info {
+            color: #3730a3;
+            background-color: #eef2ff;
+          }
+
+          &.trend-brand {
+            color: #312e81;
+            background-color: #e0e7ff;
+          }
+        }
+      }
+
+      .kpi-value {
+        font-size: 28px;
+        font-weight: 900;
+        color: $text-primary;
+        margin-top: 12px;
+      }
+
+      .kpi-subtext {
+        font-size: 12px;
+        color: $text-light;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  // Products Table Container
+  .table-container {
+    background-color: $bg-card;
+    border-radius: $radius-xl;
+    border: 1px solid $border-color;
+    box-shadow: $shadow-soft;
+    overflow: hidden;
+
+    .table-header {
+      padding: 24px;
+      border-bottom: 1px solid $border-color;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .table-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: $text-primary;
+        margin: 0;
+      }
+
+      .table-subtitle {
+        font-size: 12px;
+        color: $text-muted;
+        margin-top: 2px;
+      }
+
+      .filter-tabs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .tab-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+          font-weight: 500;
+          border-radius: $radius-sm;
+          border: none;
+          background: transparent;
+          color: $text-muted;
+          cursor: pointer;
+          transition: all $transition-fast;
+
+          &:hover {
+            background-color: $bg-subtle;
+          }
+
+          &.active {
+            background-color: $bg-subtle;
+            color: $text-primary;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+
+      .data-table {
+        width: 100%;
+        text-align: left;
+        font-size: 14px;
+        color: $text-secondary;
+        border-collapse: collapse;
+
+        .table-head {
+          background-color: $bg-body;
+          color: $text-light;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 700;
+          border-bottom: 1px solid $border-color;
+
+          .cell-head {
+            padding: 16px 24px;
+
+            &.text-right {
+              text-align: right;
+            }
+          }
+        }
+
+        .table-body {
+          .table-row {
+            border-bottom: 1px solid $border-color-light;
+            transition: background-color $transition-fast;
+
+            &:hover {
+              background-color: rgba(248, 250, 252, 0.8);
+            }
+
+            .cell-data {
+              padding: 16px 24px;
+
+              &.text-right {
+                text-align: right;
+              }
+
+              &.product-cell {
+                .product-name {
+                  font-weight: 600;
+                  color: $text-primary;
+                }
+
+                .product-sku {
+                  font-size: 11px;
+                  font-family: monospace;
+                  color: $text-light;
+                }
+              }
+
+              &.category-cell {
+                font-size: 12px;
+              }
+
+              &.price-cell {
+                font-weight: 700;
+                color: $text-primary;
+              }
+
+              &.stock-cell {
+                font-size: 12px;
+
+                .low-stock {
+                  color: $color-danger;
+                  font-weight: 700;
+                }
+              }
+
+              .status-pill {
+                padding: 4px 10px;
+                border-radius: $radius-full;
+                font-size: 11px;
+                font-weight: 700;
+                display: inline-block;
+
+                &.status-approved {
+                  background-color: $color-success-bg;
+                  color: $color-success-text;
+                }
+
+                &.status-pending {
+                  background-color: $color-warning-bg;
+                  color: $color-warning-text;
+                }
+
+                &.status-draft {
+                  background-color: $bg-subtle;
+                  color: $text-secondary;
+                }
+              }
+
+              .edit-btn {
+                font-size: 12px;
+                font-weight: 600;
+                color: $color-brand;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+
+                &:hover {
+                  color: $color-brand-hover;
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

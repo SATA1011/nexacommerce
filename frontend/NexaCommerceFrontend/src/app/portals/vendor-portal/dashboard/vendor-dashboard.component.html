@@ -1,0 +1,127 @@
+<div class="vendor-container">
+  
+  <!-- Merchant Portal Banner -->
+  <div class="merchant-banner">
+    <div>
+      <div class="merchant-meta">
+        <span class="merchant-badge">
+          Verified Merchant
+        </span>
+        <span class="commission-rate">Commission Rate: 8.5%</span>
+      </div>
+      <h1 class="banner-title">Merchant Seller Studio</h1>
+      <p class="banner-subtitle">
+        Storefront: <span class="store-name">Apex Electronics Co.</span> • Managed by {{ authService.currentUser()?.firstName || 'Merchant' }}
+      </p>
+    </div>
+
+    <div class="banner-actions">
+      <button class="new-listing-btn">
+        + New Listing
+      </button>
+      <a routerLink="/catalog" class="live-store-link">
+        View Live Store
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Stat Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>30-Day Gross Revenue</span>
+        <span class="kpi-trend trend-up">+18.4%</span>
+      </div>
+      <div class="kpi-value">$48,290.00</div>
+      <p class="kpi-subtext">Net payout pending: $44,185.35</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Orders to Fulfill</span>
+        <span class="kpi-trend trend-warn">Action Needed</span>
+      </div>
+      <div class="kpi-value">24</div>
+      <p class="kpi-subtext">8 express shipping orders</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Active SKUs</span>
+        <span class="kpi-trend trend-info">In Stock</span>
+      </div>
+      <div class="kpi-value">158</div>
+      <p class="kpi-subtext">4 variants low on stock (&lt; 5 units)</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span>Merchant Rating</span>
+        <span class="kpi-trend trend-brand">Top Tier</span>
+      </div>
+      <div class="kpi-value">4.92 ★</div>
+      <p class="kpi-subtext">Based on 618 customer reviews</p>
+    </div>
+  </div>
+
+  <!-- Products Management Table -->
+  <div class="table-container">
+    <div class="table-header">
+      <div>
+        <h2 class="table-title">Your Catalog Listings</h2>
+        <p class="table-subtitle">Manage pricing, variants, and platform admin approval states</p>
+      </div>
+      <div class="filter-tabs">
+        <button class="tab-btn active">All (18)</button>
+        <button class="tab-btn">Active (14)</button>
+        <button class="tab-btn">Under Review (2)</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead class="table-head">
+          <tr>
+            <th class="cell-head">Product Name & SKU</th>
+            <th class="cell-head">Category</th>
+            <th class="cell-head">Base Price</th>
+            <th class="cell-head">Available Units</th>
+            <th class="cell-head">Status</th>
+            <th class="cell-head text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          @for (item of merchantProducts; track item.sku) {
+            <tr class="table-row">
+              <td class="cell-data product-cell">
+                <div class="product-name">{{ item.name }}</div>
+                <span class="product-sku">SKU: {{ item.sku }}</span>
+              </td>
+              <td class="cell-data category-cell">{{ item.category }}</td>
+              <td class="cell-data price-cell">\${{ item.price.toFixed(2) }}</td>
+              <td class="cell-data stock-cell">
+                <span [class.low-stock]="item.stock < 10">
+                  {{ item.stock }} units
+                </span>
+              </td>
+              <td class="cell-data">
+                <span class="status-pill"
+                      [ngClass]="{
+                        'status-approved': item.status === 'Approved',
+                        'status-pending': item.status === 'Pending Approval',
+                        'status-draft': item.status === 'Draft'
+                      }">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td class="cell-data text-right">
+                <button class="edit-btn">Edit</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

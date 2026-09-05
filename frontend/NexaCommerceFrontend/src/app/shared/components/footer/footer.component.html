@@ -1,0 +1,55 @@
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      
+      <div class="footer-brand-column">
+        <div class="brand-logo">
+          <div class="logo-badge">N</div>
+          <span class="brand-name">NexaCommerce</span>
+        </div>
+        <p class="brand-description">
+          Enterprise multi-vendor e-commerce platform built on high-throughput .NET 10 Web API and modern Angular 19.
+        </p>
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          API Gateway Operational
+        </div>
+      </div>
+
+      <div class="footer-nav-column">
+        <h4 class="nav-title">Shop & Discover</h4>
+        <ul class="nav-list">
+          <li><a routerLink="/catalog" class="nav-link">All Categories</a></li>
+          <li><a routerLink="/catalog" class="nav-link">Trending Products</a></li>
+          <li><a routerLink="/catalog" class="nav-link">Featured Stores</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-nav-column">
+        <h4 class="nav-title">Merchants & Sellers</h4>
+        <ul class="nav-list">
+          <li><a routerLink="/auth/register" [queryParams]="{ type: 'vendor' }" class="nav-link">Sell on NexaCommerce</a></li>
+          <li><a routerLink="/vendor/dashboard" class="nav-link">Seller Dashboard</a></li>
+          <li><a href="javascript:void(0)" class="nav-link">Commission & Payouts</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-nav-column">
+        <h4 class="nav-title">Platform Security</h4>
+        <ul class="nav-list security-list">
+          <li><span>JWT & Rotating Refresh Tokens</span></li>
+          <li><span>Role-Based Access Control</span></li>
+          <li><span>Distributed Tracing & Rate Limiting</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 NexaCommerce. All rights reserved.</p>
+      <div class="platform-badge">
+        <span>Powered by .NET 10 + Angular 19</span>
+      </div>
+    </div>
+  </div>
+</footer>

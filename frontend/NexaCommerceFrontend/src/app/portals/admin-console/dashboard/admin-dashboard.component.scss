@@ -1,0 +1,382 @@
+@use 'variables' as *;
+
+.admin-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @media (min-width: 640px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  // Admin Banner
+  .admin-banner {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+    border-radius: $radius-xl;
+    padding: 24px;
+    color: $text-white;
+    box-shadow: $shadow-card;
+    border: 1px solid rgba(88, 28, 135, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @media (min-width: 640px) {
+      padding: 32px;
+    }
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      .authority-badge {
+        padding: 2px 10px;
+        border-radius: $radius-full;
+        background-color: rgba(147, 51, 234, 0.3);
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        color: #e9d5ff;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .env-tag {
+        font-size: 12px;
+        color: #d8b4fe;
+      }
+    }
+
+    .banner-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin: 0;
+
+      @media (min-width: 640px) {
+        font-size: 28px;
+      }
+    }
+
+    .banner-subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .system-health-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: rgba(88, 28, 135, 0.3);
+        border: 1px solid rgba(126, 34, 206, 0.4);
+        padding: 8px 14px;
+        border-radius: $radius-md;
+        font-size: 12px;
+        color: #f3e8ff;
+
+        .health-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: $radius-full;
+          background-color: #34d399;
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+  }
+
+  // KPI Grid
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .kpi-card {
+      padding: 24px;
+      background-color: $bg-card;
+      border-radius: $radius-lg;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-soft;
+
+      .kpi-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: $text-muted;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        .kpi-trend {
+          padding: 2px 8px;
+          border-radius: $radius-full;
+          font-size: 11px;
+
+          &.trend-purple {
+            color: #7e22ce;
+            background-color: #faf5ff;
+          }
+
+          &.trend-emerald {
+            color: $color-success-text;
+            background-color: $color-success-bg;
+          }
+
+          &.trend-indigo {
+            color: #3730a3;
+            background-color: #eef2ff;
+          }
+        }
+      }
+
+      .kpi-value {
+        font-size: 28px;
+        font-weight: 900;
+        color: $text-primary;
+        margin-top: 12px;
+      }
+
+      .kpi-subtext {
+        font-size: 12px;
+        color: $text-light;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  // Two-Column Section Layout
+  .dashboard-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-panel {
+      background-color: $bg-card;
+      border-radius: $radius-xl;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-soft;
+      padding: 24px;
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 16px;
+        border-bottom: 1px solid $border-color-light;
+
+        .panel-title {
+          font-size: 16px;
+          font-weight: 700;
+          color: $text-primary;
+          margin: 0;
+        }
+
+        .panel-subtitle {
+          font-size: 12px;
+          color: $text-muted;
+          margin-top: 2px;
+        }
+
+        .pending-pill {
+          padding: 4px 10px;
+          border-radius: $radius-full;
+          background-color: $color-warning-bg;
+          color: $color-warning-text;
+          font-size: 12px;
+          font-weight: 700;
+        }
+      }
+
+      .panel-title-bordered {
+        font-size: 16px;
+        font-weight: 700;
+        color: $text-primary;
+        padding-bottom: 16px;
+        border-bottom: 1px solid $border-color-light;
+        margin: 0;
+      }
+
+      // Applications List
+      .applications-list {
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;
+
+        .app-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          border-bottom: 1px solid $border-color-light;
+          gap: 16px;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .store-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: $text-primary;
+          }
+
+          .owner-info {
+            font-size: 12px;
+            color: $text-muted;
+            margin-top: 2px;
+          }
+
+          .tax-id {
+            font-size: 11px;
+            font-family: monospace;
+            color: $text-light;
+            margin-top: 2px;
+          }
+
+          .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+
+            .approve-btn {
+              padding: 6px 12px;
+              border-radius: $radius-sm;
+              background-color: $color-success;
+              color: $text-white;
+              font-size: 12px;
+              font-weight: 600;
+              border: none;
+              cursor: pointer;
+              box-shadow: $shadow-sm;
+              transition: background-color $transition-fast;
+
+              &:hover {
+                background-color: $color-success-hover;
+              }
+            }
+
+            .review-btn {
+              padding: 6px 12px;
+              border-radius: $radius-sm;
+              background-color: $bg-subtle;
+              color: $text-secondary;
+              font-size: 12px;
+              font-weight: 500;
+              border: none;
+              cursor: pointer;
+              transition: background-color $transition-fast;
+
+              &:hover {
+                background-color: $border-color;
+              }
+            }
+          }
+        }
+      }
+
+      // Telemetry Grid
+      .telemetry-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 20px;
+
+        .telemetry-card {
+          padding: 16px;
+          border-radius: $radius-lg;
+          background-color: $bg-body;
+          border: 1px solid rgba(226, 232, 240, 0.8);
+
+          .metric-label {
+            font-size: 12px;
+            color: $text-muted;
+            font-weight: 500;
+          }
+
+          .metric-value {
+            font-size: 20px;
+            font-weight: 900;
+            color: $text-primary;
+            margin-top: 4px;
+          }
+
+          .metric-status {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+
+            &.healthy {
+              color: $color-success;
+            }
+
+            &.info {
+              color: $color-indigo;
+            }
+
+            &.purple {
+              color: $color-purple;
+            }
+          }
+        }
+      }
+
+      .roles-banner {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: $radius-lg;
+        background-color: #faf5ff;
+        border: 1px solid #f3e8ff;
+        font-size: 12px;
+        color: #581c87;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .roles-link {
+          font-weight: 700;
+          text-decoration: underline;
+          cursor: pointer;
+
+          &:hover {
+            color: #3b0764;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

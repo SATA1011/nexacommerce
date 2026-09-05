@@ -1,0 +1,13 @@
+{
+  "workbench.colorTheme": "Dark+",
+  "files.associations": {
+    "*.ts": "typescript",
+    "*.component.html": "html",
+    "*.component.ts": "typescript"
+  },
+  "editor.semanticHighlighting.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "typescript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.completeFunctionCalls": true
+}
