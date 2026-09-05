@@ -3,48 +3,56 @@ namespace NexaCommerce.Common.Constants;
 public static class StoredProcedure
 {
     // Users
-    public const string UsersGet = "users_get";
-    public const string UsersGetByEmail = "users_get_by_email";
-    public const string UsersGetAll = "users_get_all";
-    public const string UsersInsertUpdate = "users_insert_update";
-    public const string UsersSoftDelete = "users_soft_delete";
-    public const string UsersIncrementAccessFailed = "users_increment_access_failed";
-    public const string UsersResetAccessFailed = "users_reset_access_failed";
+    public const string UsersGet = "User_Get";
+    public const string UsersGetByEmail = "User_GetByEmail";
+    public const string UsersGetAll = "User_GetAll";
+    public const string UsersInsertUpdate = "User_InsertUpdate";
+    public const string UsersSoftDelete = "User_SoftDelete";
+    public const string UsersIncrementAccessFailed = "User_IncrementAccessFailed";
+    public const string UsersResetAccessFailed = "User_ResetAccessFailed";
 
     // Roles
-    public const string RolesGet = "roles_get";
-    public const string RolesGetAll = "roles_get_all";
-    public const string RolesInsertUpdate = "roles_insert_update";
-    public const string RolesSoftDelete = "roles_soft_delete";
+    public const string RolesGet = "Role_Get";
+    public const string RolesGetAll = "Role_GetAll";
+    public const string RolesInsertUpdate = "Role_InsertUpdate";
+    public const string RolesSoftDelete = "Role_SoftDelete";
 
     // UserRoles
-    public const string UserRolesAssign = "user_roles_assign";
-    public const string UserRolesRemove = "user_roles_remove";
-    public const string UserRolesGetByUserId = "user_roles_get_by_user_id";
+    public const string UserRolesAssign = "UserRole_Assign";
+    public const string UserRolesRemove = "UserRole_Remove";
+    public const string UserRolesGetByUserId = "UserRole_GetByUserId";
 
     // RefreshTokens
-    public const string RefreshTokensGet = "refresh_tokens_get";
-    public const string RefreshTokensInsertUpdate = "refresh_tokens_insert_update";
-    public const string RefreshTokensRevoke = "refresh_tokens_revoke";
-    public const string RefreshTokensDeleteExpired = "refresh_tokens_delete_expired";
+    public const string RefreshTokensGet = "RefreshToken_Get";
+    public const string RefreshTokensInsertUpdate = "RefreshToken_InsertUpdate";
+    public const string RefreshTokensRevoke = "RefreshToken_Revoke";
+    public const string RefreshTokensDeleteExpired = "RefreshToken_DeleteExpired";
 
     // UserSessions
-    public const string UserSessionsGet = "user_sessions_get";
-    public const string UserSessionsInsertUpdate = "user_sessions_insert_update";
-    public const string UserSessionsRevokeAll = "user_sessions_revoke_all";
+    public const string UserSessionsGet = "UserSession_Get";
+    public const string UserSessionsInsertUpdate = "UserSession_InsertUpdate";
+    public const string UserSessionsRevokeAll = "UserSession_RevokeAll";
 
     // AuditLogs
-    public const string AuditLogsGetAll = "audit_logs_get_all";
-    public const string AuditLogsInsertUpdate = "audit_logs_insert_update";
+    public const string AuditLogsGetAll = "AuditLog_GetAll";
+    public const string AuditLogsInsertUpdate = "AuditLog_InsertUpdate";
 
     // SecurityEvents
-    public const string SecurityEventsInsertUpdate = "security_events_insert_update";
+    public const string SecurityEventsInsertUpdate = "SecurityEvent_InsertUpdate";
 
     // OutboxMessages
-    public const string OutboxMessagesGet = "outbox_messages_get";
-    public const string OutboxMessagesInsertUpdate = "outbox_messages_insert_update";
+    public const string OutboxMessagesGet = "OutboxMessage_Get";
+    public const string OutboxMessagesInsertUpdate = "OutboxMessage_InsertUpdate";
 
     // IdempotencyRecords
-    public const string IdempotencyRecordsGet = "idempotency_records_get";
-    public const string IdempotencyRecordsInsertUpdate = "idempotency_records_insert_update";
+    public const string IdempotencyRecordsGet = "IdempotencyRecord_Get";
+    public const string IdempotencyRecordsInsertUpdate = "IdempotencyRecord_InsertUpdate";
+
+    // Customers (Sellers / Stores)
+    public const string CustomersGet = "Customer_Get";
+    public const string CustomersGetById = "Customer_Get";
+    public const string CustomersGetByUserId = "Customer_GetByUserId";
+    public const string CustomersGetAll = "Customer_GetAll";
+    public const string CustomersInsertUpdate = "Customer_InsertUpdate";
+    public const string CustomersUpdateStatus = "Customer_UpdateStatus";
 }

@@ -27,9 +27,9 @@ public sealed class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Get paginated list of roles with optional search filtering
+    /// Get paginated list of roles with optional search filtering (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("get-roles")]
     public async Task<IActionResult> GetRoles([FromBody] GetRolesRequest request, CancellationToken cancellationToken = default)
     {
@@ -54,9 +54,9 @@ public sealed class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new role
+    /// Create a new role (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("create-role")]
     public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest request, CancellationToken cancellationToken = default)
     {
@@ -88,9 +88,9 @@ public sealed class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Soft delete a role by ID
+    /// Soft delete a role by ID (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("delete-role")]
     public async Task<IActionResult> DeleteRole([FromBody] GetUserByIdRequest request, CancellationToken cancellationToken = default)
     {
@@ -115,9 +115,9 @@ public sealed class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Assign a role to a user
+    /// Assign a role to a user (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("assign-role")]
     public async Task<IActionResult> AssignRole([FromBody] AssignUserRoleRequest request, CancellationToken cancellationToken = default)
     {
@@ -148,9 +148,9 @@ public sealed class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Remove a role from a user
+    /// Remove a role from a user (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("remove-role")]
     public async Task<IActionResult> RemoveRole([FromBody] AssignUserRoleRequest request, CancellationToken cancellationToken = default)
     {

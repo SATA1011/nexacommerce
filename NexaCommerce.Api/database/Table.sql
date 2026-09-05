@@ -199,3 +199,27 @@ CREATE TABLE IF NOT EXISTS `idempotency_records` (
     UNIQUE KEY `ux_idempotency_records_key` (`key`),
     KEY `ix_idempotency_records_expires` (`expires_at_utc`)
 ) ENGINE=InnoDB;
+
+-- Customers Table (Seller / Merchant Store Profiles)
+CREATE TABLE IF NOT EXISTS `customers` (
+    `id` CHAR(36) NOT NULL,
+    `user_id` CHAR(36) NOT NULL,
+    `store_name` VARCHAR(200) NOT NULL,
+    `slug` VARCHAR(200) NOT NULL,
+    `description` TEXT NULL,
+    `tax_number` VARCHAR(100) NULL,
+    `commission_rate` DECIMAL(5, 2) NOT NULL DEFAULT 10.00,
+    `status` VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    `is_verified` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ux_customers_user_id` (`user_id`),
+    UNIQUE KEY `ux_customers_store_name` (`store_name`),
+    UNIQUE KEY `ux_customers_slug` (`slug`),
+    KEY `ix_customers_status` (`status`),
+    KEY `ix_customers_is_deleted` (`is_deleted`),
+    CONSTRAINT `fk_customers_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+

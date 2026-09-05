@@ -19,7 +19,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
         _jwtOptions = jwtOptions.Value;
     }
 
-    public string GenerateAccessToken(User user, IEnumerable<string>? roles = null)
+    public string GenerateAccessToken(User user, IEnumerable<string>? roles = null, Guid? customerId = null)
     {
         var claims = new List<Claim>
         {
@@ -38,6 +38,11 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+        }
+
+        if (customerId.HasValue)
+        {
+            claims.Add(new Claim("customer_id", customerId.Value.ToString()));
         }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));

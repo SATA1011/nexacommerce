@@ -12,8 +12,8 @@ DELIMITER //
 -- =============================================================================
 
 -- Get User By Email (Excludes soft-deleted)
-DROP PROCEDURE IF EXISTS `users_get_by_email` //
-CREATE PROCEDURE `users_get_by_email`(
+DROP PROCEDURE IF EXISTS `User_GetByEmail` //
+CREATE PROCEDURE `User_GetByEmail`(
     IN `p_email` VARCHAR(256)
 )
 BEGIN
@@ -41,8 +41,8 @@ BEGIN
 END //
 
 -- Get User By Id (Excludes soft-deleted)
-DROP PROCEDURE IF EXISTS `users_get` //
-CREATE PROCEDURE `users_get`(
+DROP PROCEDURE IF EXISTS `User_Get` //
+CREATE PROCEDURE `User_Get`(
     IN `p_id` CHAR(36)
 )
 BEGIN
@@ -70,8 +70,8 @@ BEGIN
 END //
 
 -- Get All Users (Paginated, Search Filter, Total Count, Excludes soft-deleted)
-DROP PROCEDURE IF EXISTS `users_get_all` //
-CREATE PROCEDURE `users_get_all`(
+DROP PROCEDURE IF EXISTS `User_GetAll` //
+CREATE PROCEDURE `User_GetAll`(
     IN `p_search_term` VARCHAR(256),
     IN `p_page_number` INT,
     IN `p_page_size` INT
@@ -122,8 +122,8 @@ BEGIN
 END //
 
 -- Insert or Update User via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `users_insert_update` //
-CREATE PROCEDURE `users_insert_update`(
+DROP PROCEDURE IF EXISTS `User_InsertUpdate` //
+CREATE PROCEDURE `User_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -218,8 +218,8 @@ BEGIN
 END //
 
 -- Soft Delete User
-DROP PROCEDURE IF EXISTS `users_soft_delete` //
-CREATE PROCEDURE `users_soft_delete`(
+DROP PROCEDURE IF EXISTS `User_SoftDelete` //
+CREATE PROCEDURE `User_SoftDelete`(
     IN `p_id` CHAR(36)
 )
 BEGIN
@@ -231,8 +231,8 @@ BEGIN
 END //
 
 -- Increment Access Failed Count (Security Lockout)
-DROP PROCEDURE IF EXISTS `users_increment_access_failed` //
-CREATE PROCEDURE `users_increment_access_failed`(
+DROP PROCEDURE IF EXISTS `User_IncrementAccessFailed` //
+CREATE PROCEDURE `User_IncrementAccessFailed`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -243,8 +243,8 @@ BEGIN
 END //
 
 -- Reset Access Failed Count
-DROP PROCEDURE IF EXISTS `users_reset_access_failed` //
-CREATE PROCEDURE `users_reset_access_failed`(
+DROP PROCEDURE IF EXISTS `User_ResetAccessFailed` //
+CREATE PROCEDURE `User_ResetAccessFailed`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -259,8 +259,8 @@ END //
 -- =============================================================================
 
 -- Get Role By Id (Excludes soft-deleted)
-DROP PROCEDURE IF EXISTS `roles_get` //
-CREATE PROCEDURE `roles_get`(
+DROP PROCEDURE IF EXISTS `Role_Get` //
+CREATE PROCEDURE `Role_Get`(
     IN `p_id` CHAR(36)
 )
 BEGIN
@@ -270,8 +270,8 @@ BEGIN
 END //
 
 -- Get All Roles (Paginated, Search Filter, Total Count, Excludes soft-deleted)
-DROP PROCEDURE IF EXISTS `roles_get_all` //
-CREATE PROCEDURE `roles_get_all`(
+DROP PROCEDURE IF EXISTS `Role_GetAll` //
+CREATE PROCEDURE `Role_GetAll`(
     IN `p_search_term` VARCHAR(256),
     IN `p_page_number` INT,
     IN `p_page_size` INT
@@ -298,8 +298,8 @@ BEGIN
 END //
 
 -- Insert or Update Role via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `roles_insert_update` //
-CREATE PROCEDURE `roles_insert_update`(
+DROP PROCEDURE IF EXISTS `Role_InsertUpdate` //
+CREATE PROCEDURE `Role_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -324,8 +324,8 @@ BEGIN
 END //
 
 -- Soft Delete Role
-DROP PROCEDURE IF EXISTS `roles_soft_delete` //
-CREATE PROCEDURE `roles_soft_delete`(
+DROP PROCEDURE IF EXISTS `Role_SoftDelete` //
+CREATE PROCEDURE `Role_SoftDelete`(
     IN `p_id` CHAR(36)
 )
 BEGIN
@@ -339,8 +339,8 @@ END //
 -- =============================================================================
 
 -- Assign Role To User
-DROP PROCEDURE IF EXISTS `user_roles_assign` //
-CREATE PROCEDURE `user_roles_assign`(
+DROP PROCEDURE IF EXISTS `UserRole_Assign` //
+CREATE PROCEDURE `UserRole_Assign`(
     IN `p_user_id` CHAR(36),
     IN `p_role_id` CHAR(36)
 )
@@ -350,8 +350,8 @@ BEGIN
 END //
 
 -- Remove Role From User
-DROP PROCEDURE IF EXISTS `user_roles_remove` //
-CREATE PROCEDURE `user_roles_remove`(
+DROP PROCEDURE IF EXISTS `UserRole_Remove` //
+CREATE PROCEDURE `UserRole_Remove`(
     IN `p_user_id` CHAR(36),
     IN `p_role_id` CHAR(36)
 )
@@ -361,8 +361,8 @@ BEGIN
 END //
 
 -- Get Roles By User Id (For JWT Claims)
-DROP PROCEDURE IF EXISTS `user_roles_get_by_user_id` //
-CREATE PROCEDURE `user_roles_get_by_user_id`(
+DROP PROCEDURE IF EXISTS `UserRole_GetByUserId` //
+CREATE PROCEDURE `UserRole_GetByUserId`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -377,8 +377,8 @@ END //
 -- =============================================================================
 
 -- Get Refresh Token By Hash
-DROP PROCEDURE IF EXISTS `refresh_tokens_get` //
-CREATE PROCEDURE `refresh_tokens_get`(
+DROP PROCEDURE IF EXISTS `RefreshToken_Get` //
+CREATE PROCEDURE `RefreshToken_Get`(
     IN `p_token_hash` VARCHAR(500)
 )
 BEGIN
@@ -398,8 +398,8 @@ BEGIN
 END //
 
 -- Insert or Update Refresh Token via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `refresh_tokens_insert_update` //
-CREATE PROCEDURE `refresh_tokens_insert_update`(
+DROP PROCEDURE IF EXISTS `RefreshToken_InsertUpdate` //
+CREATE PROCEDURE `RefreshToken_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -440,8 +440,8 @@ BEGIN
 END //
 
 -- Revoke Refresh Token
-DROP PROCEDURE IF EXISTS `refresh_tokens_revoke` //
-CREATE PROCEDURE `refresh_tokens_revoke`(
+DROP PROCEDURE IF EXISTS `RefreshToken_Revoke` //
+CREATE PROCEDURE `RefreshToken_Revoke`(
     IN `p_token_hash` VARCHAR(500),
     IN `p_revoked_by_ip` VARCHAR(45),
     IN `p_replaced_by_token_hash` VARCHAR(500),
@@ -457,8 +457,8 @@ BEGIN
 END //
 
 -- Delete Expired Refresh Tokens (Cleanup Background Worker)
-DROP PROCEDURE IF EXISTS `refresh_tokens_delete_expired` //
-CREATE PROCEDURE `refresh_tokens_delete_expired`()
+DROP PROCEDURE IF EXISTS `RefreshToken_DeleteExpired` //
+CREATE PROCEDURE `RefreshToken_DeleteExpired`()
 BEGIN
     DELETE FROM `refresh_tokens`
     WHERE `expires_at_utc` < NOW(6);
@@ -469,8 +469,8 @@ END //
 -- =============================================================================
 
 -- Get Active Sessions By User Id
-DROP PROCEDURE IF EXISTS `user_sessions_get` //
-CREATE PROCEDURE `user_sessions_get`(
+DROP PROCEDURE IF EXISTS `UserSession_Get` //
+CREATE PROCEDURE `UserSession_Get`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -480,8 +480,8 @@ BEGIN
 END //
 
 -- Insert or Update User Session via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `user_sessions_insert_update` //
-CREATE PROCEDURE `user_sessions_insert_update`(
+DROP PROCEDURE IF EXISTS `UserSession_InsertUpdate` //
+CREATE PROCEDURE `UserSession_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -513,8 +513,8 @@ BEGIN
 END //
 
 -- Revoke All Sessions For User
-DROP PROCEDURE IF EXISTS `user_sessions_revoke_all` //
-CREATE PROCEDURE `user_sessions_revoke_all`(
+DROP PROCEDURE IF EXISTS `UserSession_RevokeAll` //
+CREATE PROCEDURE `UserSession_RevokeAll`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -528,8 +528,8 @@ END //
 -- =============================================================================
 
 -- Insert Security Event via JSON Payload (Returns inserted record)
-DROP PROCEDURE IF EXISTS `security_events_insert_update` //
-CREATE PROCEDURE `security_events_insert_update`(
+DROP PROCEDURE IF EXISTS `SecurityEvent_InsertUpdate` //
+CREATE PROCEDURE `SecurityEvent_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -559,8 +559,8 @@ BEGIN
 END //
 
 -- Insert Audit Log via JSON Payload (Returns inserted record)
-DROP PROCEDURE IF EXISTS `audit_logs_insert_update` //
-CREATE PROCEDURE `audit_logs_insert_update`(
+DROP PROCEDURE IF EXISTS `AuditLog_InsertUpdate` //
+CREATE PROCEDURE `AuditLog_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -596,8 +596,8 @@ BEGIN
 END //
 
 -- Get All Audit Logs (Paginated, Search Filter, Total Count)
-DROP PROCEDURE IF EXISTS `audit_logs_get_all` //
-CREATE PROCEDURE `audit_logs_get_all`(
+DROP PROCEDURE IF EXISTS `AuditLog_GetAll` //
+CREATE PROCEDURE `AuditLog_GetAll`(
     IN `p_search_term` VARCHAR(256),
     IN `p_page_number` INT,
     IN `p_page_size` INT
@@ -630,8 +630,8 @@ END //
 -- =============================================================================
 
 -- Insert or Update Outbox Message via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `outbox_messages_insert_update` //
-CREATE PROCEDURE `outbox_messages_insert_update`(
+DROP PROCEDURE IF EXISTS `OutboxMessage_InsertUpdate` //
+CREATE PROCEDURE `OutboxMessage_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -655,8 +655,8 @@ BEGIN
 END //
 
 -- Get Unprocessed Outbox Messages
-DROP PROCEDURE IF EXISTS `outbox_messages_get` //
-CREATE PROCEDURE `outbox_messages_get`(
+DROP PROCEDURE IF EXISTS `OutboxMessage_Get` //
+CREATE PROCEDURE `OutboxMessage_Get`(
     IN `p_batch_size` INT
 )
 BEGIN
@@ -668,8 +668,8 @@ BEGIN
 END //
 
 -- Get Idempotency Record By Key
-DROP PROCEDURE IF EXISTS `idempotency_records_get` //
-CREATE PROCEDURE `idempotency_records_get`(
+DROP PROCEDURE IF EXISTS `IdempotencyRecord_Get` //
+CREATE PROCEDURE `IdempotencyRecord_Get`(
     IN `p_key` VARCHAR(256)
 )
 BEGIN
@@ -679,8 +679,8 @@ BEGIN
 END //
 
 -- Insert or Update Idempotency Record via JSON Payload (Returns inserted/updated record)
-DROP PROCEDURE IF EXISTS `idempotency_records_insert_update` //
-CREATE PROCEDURE `idempotency_records_insert_update`(
+DROP PROCEDURE IF EXISTS `IdempotencyRecord_InsertUpdate` //
+CREATE PROCEDURE `IdempotencyRecord_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -713,6 +713,188 @@ BEGIN
     SELECT `id`, `key`, `operation_name`, `request_hash`, `response_json`, `status_code`, `created_at_utc`, `expires_at_utc`
     FROM `idempotency_records`
     WHERE `id` = `v_id`;
+END //
+
+-- =============================================================================
+-- 9. `customers` Stored Procedures (Seller / Merchant Store Profiles)
+-- =============================================================================
+
+-- Get Customer Store by ID
+DROP PROCEDURE IF EXISTS `Customer_GetById` //
+DROP PROCEDURE IF EXISTS `Customer_Get` //
+CREATE PROCEDURE `Customer_Get`(
+    IN `p_id` CHAR(36)
+)
+BEGIN
+    SELECT 
+        c.`id`,
+        c.`user_id`,
+        c.`store_name`,
+        c.`slug`,
+        c.`description`,
+        c.`tax_number`,
+        c.`commission_rate`,
+        c.`status`,
+        c.`is_verified`,
+        c.`created_at_utc`,
+        c.`updated_at_utc`,
+        c.`is_deleted`
+    FROM `customers` c
+    WHERE c.`id` = `p_id` AND c.`is_deleted` = 0;
+END //
+
+-- Get Customer Store by User ID
+DROP PROCEDURE IF EXISTS `Customer_GetByUserId` //
+CREATE PROCEDURE `Customer_GetByUserId`(
+    IN `p_user_id` CHAR(36)
+)
+BEGIN
+    SELECT 
+        c.`id`,
+        c.`user_id`,
+        c.`store_name`,
+        c.`slug`,
+        c.`description`,
+        c.`tax_number`,
+        c.`commission_rate`,
+        c.`status`,
+        c.`is_verified`,
+        c.`created_at_utc`,
+        c.`updated_at_utc`,
+        c.`is_deleted`
+    FROM `customers` c
+    WHERE c.`user_id` = `p_user_id` AND c.`is_deleted` = 0;
+END //
+
+-- Get All Customer Stores with Pagination, Search Term & Status Filter
+DROP PROCEDURE IF EXISTS `Customer_GetAll` //
+CREATE PROCEDURE `Customer_GetAll`(
+    IN `p_search_term` VARCHAR(200),
+    IN `p_status` VARCHAR(50),
+    IN `p_page_number` INT,
+    IN `p_page_size` INT
+)
+BEGIN
+    DECLARE `v_offset` INT;
+    SET `v_offset` = (`p_page_number` - 1) * `p_page_size`;
+
+    -- Total Count
+    SELECT COUNT(1)
+    FROM `customers` c
+    WHERE c.`is_deleted` = 0
+      AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
+      AND (`p_status` IS NULL OR c.`status` = `p_status`);
+
+    -- Paginated Results
+    SELECT 
+        c.`id`,
+        c.`user_id`,
+        c.`store_name`,
+        c.`slug`,
+        c.`description`,
+        c.`tax_number`,
+        c.`commission_rate`,
+        c.`status`,
+        c.`is_verified`,
+        c.`created_at_utc`,
+        c.`updated_at_utc`,
+        c.`is_deleted`
+    FROM `customers` c
+    WHERE c.`is_deleted` = 0
+      AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
+      AND (`p_status` IS NULL OR c.`status` = `p_status`)
+    ORDER BY c.`created_at_utc` DESC
+    LIMIT `v_offset`, `p_page_size`;
+END //
+
+-- Insert or Update Customer Store via JSON Payload
+DROP PROCEDURE IF EXISTS `Customer_InsertUpdate` //
+CREATE PROCEDURE `Customer_InsertUpdate`(
+    IN `p_json` LONGTEXT
+)
+BEGIN
+    DECLARE `v_id` CHAR(36);
+    DECLARE `v_user_id` CHAR(36);
+    DECLARE `v_store_name` VARCHAR(200);
+    DECLARE `v_slug` VARCHAR(200);
+    DECLARE `v_description` TEXT;
+    DECLARE `v_tax_number` VARCHAR(100);
+    DECLARE `v_commission_rate` DECIMAL(5, 2);
+    DECLARE `v_status` VARCHAR(50);
+    DECLARE `v_is_verified` TINYINT(1);
+
+    SET `v_id` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.id'));
+    SET `v_user_id` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.user_id'));
+    SET `v_store_name` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.store_name'));
+    SET `v_slug` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.slug'));
+    SET `v_description` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.description'));
+    SET `v_tax_number` = JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.tax_number'));
+    SET `v_commission_rate` = COALESCE(JSON_EXTRACT(`p_json`, '$.commission_rate'), 10.00);
+    SET `v_status` = COALESCE(JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.status')), 'Pending');
+    SET `v_is_verified` = COALESCE(JSON_EXTRACT(`p_json`, '$.is_verified'), 0);
+
+    INSERT INTO `customers` (
+        `id`, `user_id`, `store_name`, `slug`, `description`, `tax_number`, `commission_rate`, `status`, `is_verified`, `created_at_utc`, `is_deleted`
+    ) VALUES (
+        `v_id`, `v_user_id`, `v_store_name`, `v_slug`, `v_description`, `v_tax_number`, `v_commission_rate`, `v_status`, `v_is_verified`, UTC_TIMESTAMP(6), 0
+    )
+    ON DUPLICATE KEY UPDATE
+        `store_name` = `v_store_name`,
+        `slug` = `v_slug`,
+        `description` = `v_description`,
+        `tax_number` = `v_tax_number`,
+        `commission_rate` = `v_commission_rate`,
+        `status` = `v_status`,
+        `is_verified` = `v_is_verified`,
+        `updated_at_utc` = UTC_TIMESTAMP(6);
+
+    SELECT 
+        c.`id`,
+        c.`user_id`,
+        c.`store_name`,
+        c.`slug`,
+        c.`description`,
+        c.`tax_number`,
+        c.`commission_rate`,
+        c.`status`,
+        c.`is_verified`,
+        c.`created_at_utc`,
+        c.`updated_at_utc`,
+        c.`is_deleted`
+    FROM `customers` c
+    WHERE c.`id` = `v_id`;
+END //
+
+-- Update Customer Store Status (Admin Approval / Rejection / Suspension)
+DROP PROCEDURE IF EXISTS `Customer_UpdateStatus` //
+CREATE PROCEDURE `Customer_UpdateStatus`(
+    IN `p_id` CHAR(36),
+    IN `p_status` VARCHAR(50),
+    IN `p_is_verified` TINYINT(1)
+)
+BEGIN
+    UPDATE `customers`
+    SET 
+        `status` = `p_status`,
+        `is_verified` = `p_is_verified`,
+        `updated_at_utc` = UTC_TIMESTAMP(6)
+    WHERE `id` = `p_id` AND `is_deleted` = 0;
+
+    SELECT 
+        c.`id`,
+        c.`user_id`,
+        c.`store_name`,
+        c.`slug`,
+        c.`description`,
+        c.`tax_number`,
+        c.`commission_rate`,
+        c.`status`,
+        c.`is_verified`,
+        c.`created_at_utc`,
+        c.`updated_at_utc`,
+        c.`is_deleted`
+    FROM `customers` c
+    WHERE c.`id` = `p_id`;
 END //
 
 DELIMITER ;

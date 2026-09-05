@@ -18,15 +18,20 @@ public sealed class AccountController : ControllerBase
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserSessionRepository _userSessionRepository;
     private readonly IRoleRepository _roleRepository;
+    private readonly ICustomerRepository _customerRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ILogger<AccountController> _logger;
+
+    // Seeded User Role ID (Normal User) from Table.sql
+    private static readonly Guid UserRoleId = Guid.Parse("44444444-4444-4444-4444-444444444444");
 
     public AccountController(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IUserSessionRepository userSessionRepository,
         IRoleRepository roleRepository,
+        ICustomerRepository customerRepository,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         ILogger<AccountController> logger)
@@ -35,6 +40,7 @@ public sealed class AccountController : ControllerBase
         _refreshTokenRepository = refreshTokenRepository;
         _userSessionRepository = userSessionRepository;
         _roleRepository = roleRepository;
+        _customerRepository = customerRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
         _logger = logger;
@@ -65,7 +71,8 @@ public sealed class AccountController : ControllerBase
             }
 
             var userRoles = await _roleRepository.GetRoleNamesByUserIdAsync(user.Id, cancellationToken);
-            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles);
+            var customer = await _customerRepository.GetByUserIdAsync(user.Id, cancellationToken);
+            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, customer?.Id);
             var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
             var expiresAt = DateTime.UtcNow.AddMinutes(60);
 
@@ -139,7 +146,8 @@ public sealed class AccountController : ControllerBase
 
             var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
             var userRoles = await _roleRepository.GetRoleNamesByUserIdAsync(user.Id, cancellationToken);
-            var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles);
+            var customer = await _customerRepository.GetByUserIdAsync(user.Id, cancellationToken);
+            var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, customer?.Id);
             var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
             var newTokenHash = HashToken(newRefreshToken);
 
@@ -305,6 +313,17 @@ public sealed class AccountController : ControllerBase
             };
 
             var createdUser = await _userRepository.InsertOrUpdateAsync(newUser, cancellationToken);
+
+            // Assign default User role to newly registered normal users
+            try
+            {
+                await _roleRepository.AssignRoleToUserAsync(createdUser.Id, UserRoleId, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not assign default User role ID {RoleId} to user {UserId}.", UserRoleId, createdUser.Id);
+            }
+
             _logger.LogInformation("Successfully created user account {Email} ({UserId})", createdUser.Email, createdUser.Id);
 
             var userResponse = MapToUserResponse(createdUser);
@@ -318,9 +337,9 @@ public sealed class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Get paginated list of users with optional search filtering
+    /// Get paginated list of users with optional search filtering (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("get-users")]
     public async Task<IActionResult> GetUsers([FromBody] GetUsersRequest request, CancellationToken cancellationToken = default)
     {
@@ -393,9 +412,9 @@ public sealed class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Soft delete user account by ID via POST body
+    /// Soft delete user account by ID via POST body (Admin only)
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost("delete-user")]
     public async Task<IActionResult> SoftDeleteUser([FromBody] SoftDeleteUserRequest request, CancellationToken cancellationToken = default)
     {

@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using NexaCommerce.Api.Filters;
 using NexaCommerce.Data.Factories;
-using NexaCommerce.Data.Migrations;
 using NexaCommerce.Domain.Interfaces;
 using NexaCommerce.Repository.Identity;
 using NexaCommerce.Security.Cryptography;
@@ -34,6 +33,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
@@ -81,7 +81,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin", "SuperAdmin"));
+    options.AddPolicy("RequireCustomerRole", policy => policy.RequireRole("Customer", "Admin", "SuperAdmin"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User", "Customer", "Admin", "SuperAdmin"));
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -105,16 +110,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Run Database Migrations (Table.sql & AllStoredProcedure.sql via DbUp)
-var databaseDirectory = Path.Combine(app.Environment.ContentRootPath, "database");
-try
-{
-    DatabaseMigrator.Migrate(connectionString, databaseDirectory);
-}
-catch (Exception ex)
-{
-    app.Logger.LogWarning(ex, "Database migration on startup was skipped or encountered an error. Ensure local MySQL service is running.");
-}
 
 // Enable Swagger UI
 app.UseSwagger();
