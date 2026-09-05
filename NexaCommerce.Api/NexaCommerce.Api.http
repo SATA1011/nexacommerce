@@ -1,2 +1,2 @@
-@NexaCommerce.Api_HostAddress = http://localhost:5051
+@NexaCommerce.Api_HostAddress = https://api.nexacommerce.store
 

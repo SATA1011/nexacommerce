@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   registerUser(payload: RegisterUserRequest): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.baseUrl}/register-user`, payload);
+    return this.http.post<ApiResponse>(`${this.baseUrl}/create-user`, payload);
   }
 
   registerVendor(payload: RegisterVendorRequest): Observable<ApiResponse> {
