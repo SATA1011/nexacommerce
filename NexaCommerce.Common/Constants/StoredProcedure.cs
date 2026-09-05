@@ -13,6 +13,7 @@ public static class StoredProcedure
 
     // Roles
     public const string RolesGet = "Role_Get";
+    public const string RolesGetByName = "Role_GetByName";
     public const string RolesGetAll = "Role_GetAll";
     public const string RolesInsertUpdate = "Role_InsertUpdate";
     public const string RolesSoftDelete = "Role_SoftDelete";

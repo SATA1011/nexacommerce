@@ -64,7 +64,9 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 CREATE TABLE IF NOT EXISTS `user_roles` (
     `user_id` CHAR(36) NOT NULL,
     `role_id` CHAR(36) NOT NULL,
+    `role_name` VARCHAR(100) NULL,
     PRIMARY KEY (`user_id`, `role_id`),
+    KEY `ix_user_roles_role_name` (`role_name`),
     CONSTRAINT `fk_user_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_user_roles_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;

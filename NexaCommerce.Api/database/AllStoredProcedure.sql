@@ -269,6 +269,19 @@ BEGIN
     WHERE `id` = `p_id` AND `is_deleted` = 0;
 END //
 
+-- Get Role By Name (Case-insensitive, excludes soft-deleted)
+DROP PROCEDURE IF EXISTS `Role_GetByName` //
+CREATE PROCEDURE `Role_GetByName`(
+    IN `p_name` VARCHAR(100)
+)
+BEGIN
+    SELECT `id`, `name`, `normalized_name`, `description`, `is_deleted`
+    FROM `roles`
+    WHERE (`normalized_name` = UPPER(TRIM(`p_name`)) OR `name` = TRIM(`p_name`))
+      AND `is_deleted` = 0
+    LIMIT 1;
+END //
+
 -- Get All Roles (Paginated, Search Filter, Total Count, Excludes soft-deleted)
 DROP PROCEDURE IF EXISTS `Role_GetAll` //
 CREATE PROCEDURE `Role_GetAll`(
@@ -345,8 +358,12 @@ CREATE PROCEDURE `UserRole_Assign`(
     IN `p_role_id` CHAR(36)
 )
 BEGIN
-    INSERT IGNORE INTO `user_roles` (`user_id`, `role_id`)
-    VALUES (`p_user_id`, `p_role_id`);
+    DECLARE `v_role_name` VARCHAR(100);
+    SELECT `name` INTO `v_role_name` FROM `roles` WHERE `id` = `p_role_id`;
+
+    INSERT INTO `user_roles` (`user_id`, `role_id`, `role_name`)
+    VALUES (`p_user_id`, `p_role_id`, `v_role_name`)
+    ON DUPLICATE KEY UPDATE `role_name` = VALUES(`role_name`);
 END //
 
 -- Remove Role From User

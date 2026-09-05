@@ -26,6 +26,16 @@ public sealed class RoleRepository : IRoleRepository
         );
     }
 
+    public async Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+        return await connection.QuerySingleOrDefaultAsync<Role>(
+            StoredProcedure.RolesGetByName,
+            new { p_name = name },
+            commandType: CommandType.StoredProcedure
+        );
+    }
+
     public async Task<(IEnumerable<Role> Roles, int TotalCount)> GetAllAsync(string? searchTerm, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);

@@ -23,8 +23,6 @@ public sealed class AccountController : ControllerBase
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ILogger<AccountController> _logger;
 
-    // Seeded User Role ID (Normal User) from Table.sql
-    private static readonly Guid UserRoleId = Guid.Parse("44444444-4444-4444-4444-444444444444");
 
     public AccountController(
         IUserRepository userRepository,
@@ -317,11 +315,19 @@ public sealed class AccountController : ControllerBase
             // Assign default User role to newly registered normal users
             try
             {
-                await _roleRepository.AssignRoleToUserAsync(createdUser.Id, UserRoleId, cancellationToken);
+                var userRole = await _roleRepository.GetByNameAsync("User", cancellationToken);
+                if (userRole is not null)
+                {
+                    await _roleRepository.AssignRoleToUserAsync(createdUser.Id, userRole.Id, cancellationToken);
+                }
+                else
+                {
+                    _logger.LogWarning("Default User role not found in database for user {UserId}.", createdUser.Id);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Could not assign default User role ID {RoleId} to user {UserId}.", UserRoleId, createdUser.Id);
+                _logger.LogWarning(ex, "Could not assign default User role to user {UserId}.", createdUser.Id);
             }
 
             _logger.LogInformation("Successfully created user account {Email} ({UserId})", createdUser.Email, createdUser.Id);

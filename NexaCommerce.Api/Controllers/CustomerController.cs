@@ -18,8 +18,6 @@ public sealed class CustomerController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly ILogger<CustomerController> _logger;
 
-    // Seeded Customer Role ID (Customer who sells products) from Table.sql
-    private static readonly Guid CustomerRoleId = Guid.Parse("33333333-3333-3333-3333-333333333333");
 
     public CustomerController(
         ICustomerRepository customerRepository,
@@ -80,11 +78,19 @@ public sealed class CustomerController : ControllerBase
             // Assign Customer role (seller privileges) to user
             try
             {
-                await _roleRepository.AssignRoleToUserAsync(userId, CustomerRoleId, cancellationToken);
+                var customerRole = await _roleRepository.GetByNameAsync("Customer", cancellationToken);
+                if (customerRole is not null)
+                {
+                    await _roleRepository.AssignRoleToUserAsync(userId, customerRole.Id, cancellationToken);
+                }
+                else
+                {
+                    _logger.LogWarning("Customer role not found in database when registering store for user {UserId}.", userId);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Could not assign default Customer role ID {RoleId} to user {UserId}. Checking roles table.", CustomerRoleId, userId);
+                _logger.LogWarning(ex, "Could not assign Customer role to user {UserId}.", userId);
             }
 
             _logger.LogInformation("Store '{StoreName}' registered successfully for User {UserId} in Pending status.", createdStore.StoreName, userId);
