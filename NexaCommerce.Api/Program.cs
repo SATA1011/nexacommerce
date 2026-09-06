@@ -154,6 +154,12 @@ app.UseCors("AllowClientApp");
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Root redirect to Swagger UI for instant access in browser
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
+// Health check endpoint for uptime monitor / cloud ping
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }));
+
 app.MapControllers();
 
 app.Run();
