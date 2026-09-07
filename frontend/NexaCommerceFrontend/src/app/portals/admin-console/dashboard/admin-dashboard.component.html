@@ -35,6 +35,14 @@
     </button>
     <button 
       class="nav-tab-btn" 
+      [class.active]="activeTab() === 'vendors'"
+      (click)="activeTab.set('vendors')">
+      <span class="tab-icon">🏪</span>
+      <span>Vendors & Stores</span>
+      <span class="tab-counter">{{ totalVendors() }}</span>
+    </button>
+    <button 
+      class="nav-tab-btn" 
       [class.active]="activeTab() === 'overview'"
       (click)="activeTab.set('overview')">
       <span class="tab-icon">📊</span>
@@ -159,7 +167,149 @@
     </div>
   }
 
-  <!-- ================= TAB 2: PLATFORM OVERVIEW ================= -->
+  <!-- ================= TAB 2: VENDORS & STORES ================= -->
+  @if (activeTab() === 'vendors') {
+    <div class="management-section">
+      
+      @if (vendorActionFeedback()) {
+        <div class="action-alert" [class.alert-success]="vendorActionFeedback()?.type === 'success'" [class.alert-error]="vendorActionFeedback()?.type === 'error'">
+          <span>{{ vendorActionFeedback()?.message }}</span>
+        </div>
+      }
+
+      <!-- Controls Toolbar -->
+      <div class="toolbar-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="vendorSearchTerm" 
+            (keyup.enter)="onVendorSearch()"
+            placeholder="Search stores by name, slug, or tax number..." 
+            class="search-input" />
+          <button class="search-btn" (click)="onVendorSearch()">Search</button>
+        </div>
+
+        <div class="toolbar-actions">
+          <select class="filter-select" [(ngModel)]="vendorStatusFilter" (change)="loadVendors()">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Suspended">Suspended</option>
+          </select>
+          <button class="refresh-btn" (click)="loadVendors()" [disabled]="loadingVendors()">
+            <span class="refresh-icon" [class.spinning]="loadingVendors()">↻</span>
+            <span>Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stores Table Card -->
+      <div class="table-card">
+        <div class="table-header-title">
+          <div>
+            <h2 class="table-title">Registered Vendor Stores</h2>
+            <p class="table-subtitle">Live records from the <code>vendors</code> table in database</p>
+          </div>
+          <span class="count-pill">{{ totalVendors() }} Stores</span>
+        </div>
+
+        @if (loadingVendors()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading vendor stores from database...</p>
+          </div>
+        } @else if (vendors().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon">🏪</span>
+            <h3>No vendor stores found</h3>
+            <p>No stores registered yet or none matched your filter.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Store Details</th>
+                  <th>Tax / Business ID</th>
+                  <th>Commission</th>
+                  <th>Status</th>
+                  <th>Verified</th>
+                  <th>Registered</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (store of vendors(); track store.id) {
+                  <tr class="table-row">
+                    <td>
+                      <div class="store-cell">
+                        <div class="avatar-circle store-avatar">
+                          🏪
+                        </div>
+                        <div>
+                          <div class="user-name">{{ store.storeName }}</div>
+                          <div class="user-email">/store/{{ store.slug }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="phone-text">{{ store.taxNumber || '—' }}</span>
+                    </td>
+                    <td>
+                      <span class="commission-pill">{{ store.commissionRate }}%</span>
+                    </td>
+                    <td>
+                      <span 
+                        class="status-badge"
+                        [class.status-pending]="store.status.toLowerCase() === 'pending'"
+                        [class.status-approved]="store.status.toLowerCase() === 'approved'"
+                        [class.status-rejected]="store.status.toLowerCase() === 'rejected'"
+                        [class.status-suspended]="store.status.toLowerCase() === 'suspended'">
+                        {{ store.status }}
+                      </span>
+                    </td>
+                    <td>
+                      @if (store.isVerified) {
+                        <span class="verified-pill">✓ Verified</span>
+                      } @else {
+                        <span class="unverified-pill">Unverified</span>
+                      }
+                    </td>
+                    <td>
+                      <span class="date-text">{{ store.createdAtUtc | date:'mediumDate' }}</span>
+                    </td>
+                    <td class="text-right">
+                      <div class="table-action-group">
+                        @if (store.status.toLowerCase() !== 'approved') {
+                          <button class="approve-action-btn" (click)="updateVendorStatus(store.id, 'Approved', true)" title="Approve and verify vendor">
+                            ✓ Approve
+                          </button>
+                        }
+                        @if (store.status.toLowerCase() === 'approved') {
+                          <button class="suspend-action-btn" (click)="updateVendorStatus(store.id, 'Suspended', false)" title="Suspend vendor store">
+                            ⏸ Suspend
+                          </button>
+                        }
+                        @if (store.status.toLowerCase() === 'pending') {
+                          <button class="reject-action-btn" (click)="updateVendorStatus(store.id, 'Rejected', false)" title="Reject application">
+                            ✕ Reject
+                          </button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ================= TAB 3: PLATFORM OVERVIEW ================= -->
   @if (activeTab() === 'overview') {
     <!-- High-Level Platform Statistics -->
     <div class="kpi-grid">
@@ -175,10 +325,10 @@
       <div class="kpi-card">
         <div class="kpi-header">
           <span>Onboarded Merchants</span>
-          <span class="kpi-trend trend-emerald">3 Pending</span>
+          <span class="kpi-trend trend-emerald">{{ pendingStores.length }} Pending</span>
         </div>
-        <div class="kpi-value">284</div>
-        <p class="kpi-subtext">Active storefronts selling</p>
+        <div class="kpi-value">{{ totalVendors() }}</div>
+        <p class="kpi-subtext">Live vendor stores registered</p>
       </div>
 
       <div class="kpi-card">
@@ -208,23 +358,31 @@
             <h3 class="panel-title">Pending Merchant Applications</h3>
             <p class="panel-subtitle">Review business legitimacy before granting Vendor role</p>
           </div>
-          <span class="pending-pill">3 Pending</span>
+          <span class="pending-pill">{{ pendingStores.length }} Pending</span>
         </div>
 
         <div class="applications-list">
-          @for (app of pendingApplications; track app.id) {
-            <div class="app-row">
-              <div>
-                <div class="store-name">{{ app.storeName }}</div>
-                <div class="owner-info">{{ app.ownerName }} • {{ app.email }}</div>
-                <div class="tax-id">Tax ID: {{ app.taxNumber }}</div>
-              </div>
-
-              <div class="action-btns">
-                <button class="approve-btn">Approve</button>
-                <button class="review-btn">Review</button>
-              </div>
+          @if (pendingStores.length === 0) {
+            <div class="empty-state" style="padding: 24px;">
+              <span class="empty-icon">✓</span>
+              <h3>All Caught Up</h3>
+              <p>No vendor applications currently pending review.</p>
             </div>
+          } @else {
+            @for (app of pendingStores; track app.id) {
+              <div class="app-row">
+                <div>
+                  <div class="store-name">{{ app.storeName }}</div>
+                  <div class="owner-info">/store/{{ app.slug }}</div>
+                  <div class="tax-id">Tax ID: {{ app.taxNumber || 'Not specified' }}</div>
+                </div>
+
+                <div class="action-btns">
+                  <button class="approve-btn" (click)="updateVendorStatus(app.id, 'Approved', true)">Approve</button>
+                  <button class="review-btn" (click)="updateVendorStatus(app.id, 'Rejected', false)">Reject</button>
+                </div>
+              </div>
+            }
           }
         </div>
       </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService, UserWithRoles } from '../../../core/services/admin.service';
+import { VendorService, StoreResponse } from '../../../core/services/vendor.service';
 import { RoleResponse } from '../../../core/models/auth.models';
 
 @Component({
@@ -15,9 +16,10 @@ import { RoleResponse } from '../../../core/models/auth.models';
 export class AdminDashboardComponent implements OnInit {
   readonly authService = inject(AuthService);
   private readonly adminService = inject(AdminService);
+  private readonly vendorService = inject(VendorService);
 
   // Navigation tab state
-  activeTab = signal<'users' | 'overview'>('users');
+  activeTab = signal<'users' | 'vendors' | 'overview'>('users');
 
   // Users state
   users = signal<UserWithRoles[]>([]);
@@ -37,16 +39,23 @@ export class AdminDashboardComponent implements OnInit {
   modalLoading = signal<boolean>(false);
   modalFeedback = signal<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  // Vendors state
+  vendors = signal<StoreResponse[]>([]);
+  loadingVendors = signal<boolean>(false);
+  totalVendors = signal<number>(0);
+  vendorSearchTerm = '';
+  vendorStatusFilter = '';
+  vendorActionFeedback = signal<{ type: 'success' | 'error'; message: string } | null>(null);
+
   // Overview metrics
-  pendingApplications = [
-    { id: '1', storeName: 'Nordic Sound Labs', ownerName: 'Lukas Meyer', email: 'lukas@nordicsound.io', taxNumber: 'EU-9283741' },
-    { id: '2', storeName: 'Kinetics Apparel', ownerName: 'Elena Rostova', email: 'elena@kinetics.style', taxNumber: 'US-8291038' },
-    { id: '3', storeName: 'Velocita Mechanicals', ownerName: 'Marco Bellini', email: 'marco@velocita.it', taxNumber: 'IT-3928104' }
-  ];
+  get pendingStores(): StoreResponse[] {
+    return this.vendors().filter(v => v.status?.toLowerCase() === 'pending');
+  }
 
   ngOnInit(): void {
     this.loadUsers();
     this.loadRoles();
+    this.loadVendors();
   }
 
   loadUsers(): void {
@@ -172,5 +181,43 @@ export class AdminDashboardComponent implements OnInit {
     const first = firstName ? firstName[0].toUpperCase() : '';
     const last = lastName ? lastName[0].toUpperCase() : '';
     return (first + last) || 'U';
+  }
+
+  loadVendors(): void {
+    this.loadingVendors.set(true);
+    this.vendorService.getStores(this.vendorSearchTerm, this.vendorStatusFilter).subscribe({
+      next: (res) => {
+        this.loadingVendors.set(false);
+        this.vendors.set(res.items || []);
+        this.totalVendors.set(res.totalCount ?? (res.items ? res.items.length : 0));
+      },
+      error: () => {
+        this.loadingVendors.set(false);
+      }
+    });
+  }
+
+  onVendorSearch(): void {
+    this.loadVendors();
+  }
+
+  updateVendorStatus(storeId: string, status: string, isVerified: boolean): void {
+    this.vendorActionFeedback.set(null);
+    this.vendorService.updateStoreStatus(storeId, status, isVerified).subscribe({
+      next: (updated) => {
+        this.vendorActionFeedback.set({
+          type: 'success',
+          message: `Store "${updated.storeName}" is now ${status}!`
+        });
+        this.loadVendors();
+        setTimeout(() => this.vendorActionFeedback.set(null), 4000);
+      },
+      error: (err) => {
+        this.vendorActionFeedback.set({
+          type: 'error',
+          message: err.error?.message || 'Failed to update store status.'
+        });
+      }
+    });
   }
 }

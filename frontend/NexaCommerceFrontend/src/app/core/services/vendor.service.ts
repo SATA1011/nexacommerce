@@ -35,4 +35,19 @@ export class VendorService {
   getMyStore(): Observable<StoreResponse> {
     return this.http.post<StoreResponse>(`${this.baseUrl}/my-store`, {});
   }
+
+  getStores(searchTerm?: string, status?: string, pageNumber: number = 1, pageSize: number = 10): Observable<{ items: StoreResponse[]; totalCount: number; pageNumber: number; pageSize: number; hasNextPage: boolean }> {
+    return this.http.post<{ items: StoreResponse[]; totalCount: number; pageNumber: number; pageSize: number; hasNextPage: boolean }>(
+      `${this.baseUrl}/get-stores`,
+      { searchTerm, status, pageNumber, pageSize }
+    );
+  }
+
+  updateStoreStatus(storeId: string, status: string, isVerified: boolean): Observable<StoreResponse> {
+    return this.http.post<StoreResponse>(`${this.baseUrl}/update-store-status`, {
+      storeId,
+      status,
+      isVerified
+    });
+  }
 }
