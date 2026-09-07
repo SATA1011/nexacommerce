@@ -8,7 +8,8 @@ import {
   RegisterUserRequest,
   RegisterVendorRequest,
   RefreshTokenRequest,
-  ApiResponse
+  ApiResponse,
+  UserResponse
 } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
 
@@ -41,8 +42,8 @@ export class AuthService {
     );
   }
 
-  registerUser(payload: RegisterUserRequest): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.baseUrl}/create-user`, payload);
+  registerUser(payload: RegisterUserRequest): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${this.baseUrl}/create-user`, payload);
   }
 
   registerVendor(payload: RegisterVendorRequest): Observable<ApiResponse> {
@@ -93,7 +94,7 @@ export class AuthService {
   logout(): void {
     const refreshToken = this.tokenStorage.getRefreshToken();
     if (refreshToken) {
-      this.http.post(`${this.baseUrl}/logout`, { refreshToken }).subscribe({
+      this.http.post(`${this.baseUrl}/revoke-token`, { refreshToken }).subscribe({
         error: () => {
           // Silent catch on logout failure
         }

@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "http://localhost:5051",
-    "secure": false,
+    "target": "https://nexacommerce-0rxr.onrender.com",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   }

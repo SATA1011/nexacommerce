@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.nexacommerce.store/api/v1'
+  apiUrl: 'https://nexacommerce-0rxr.onrender.com/api/v1'
 };
