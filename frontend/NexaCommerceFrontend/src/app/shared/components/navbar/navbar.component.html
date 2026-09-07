@@ -85,6 +85,12 @@
           <a routerLink="/auth/login" class="guest-signin-link">
             Sign In
           </a>
+          <a routerLink="/become-seller" class="guest-seller-btn">
+            Become a Seller
+          </a>
+          <a routerLink="/auth/register" class="guest-register-btn">
+            Register
+          </a>
         }
       </div>
 
@@ -120,7 +126,8 @@
           </div>
         } @else {
           <div class="mobile-guest-grid">
-            <a routerLink="/auth/login" (click)="mobileMenuOpen.set(false)" class="mobile-btn-primary">Sign In</a>
+            <a routerLink="/auth/login" (click)="mobileMenuOpen.set(false)" class="mobile-btn-secondary">Sign In</a>
+            <a routerLink="/auth/register" (click)="mobileMenuOpen.set(false)" class="mobile-btn-primary">Register</a>
           </div>
         }
       </div>

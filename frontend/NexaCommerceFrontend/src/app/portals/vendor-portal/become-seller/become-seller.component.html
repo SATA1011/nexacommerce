@@ -1,0 +1,187 @@
+<div class="seller-page">
+
+  <!-- Checking store status loader -->
+  @if (checkingStore()) {
+    <div class="page-loading">
+      <div class="loader-ring"></div>
+      <p>Checking your account...</p>
+    </div>
+  }
+
+  <!-- Already has a store -->
+  @else if (existingStore()) {
+    <div class="page-center">
+      <div class="status-card">
+        <div class="store-icon">🏪</div>
+        <h2 class="status-title">Your Store is Registered</h2>
+        <p class="store-name-display">{{ existingStore().storeName }}</p>
+
+        <div class="status-badge-wrap">
+          <span class="status-pill" [class]="getStatusColor(existingStore().status)">
+            {{ getStatusIcon(existingStore().status) }} {{ existingStore().status }}
+          </span>
+        </div>
+
+        @if (existingStore().status === 'Pending') {
+          <p class="status-info">Your store application is under review. Our team will approve it shortly.</p>
+        } @else if (existingStore().status === 'Approved') {
+          <p class="status-info">Your store is live! Head to the Seller Portal to manage your products.</p>
+          <a routerLink="/vendor/dashboard" class="cta-btn">Go to Seller Portal →</a>
+        } @else if (existingStore().status === 'Rejected') {
+          <p class="status-info">Your store application was rejected. Please contact support for more details.</p>
+        } @else if (existingStore().status === 'Suspended') {
+          <p class="status-info">Your store has been suspended. Please contact support to resolve this.</p>
+        }
+
+        <div class="store-meta">
+          <span class="meta-row"><b>Store URL slug:</b> /{{ existingStore().slug }}</span>
+          <span class="meta-row"><b>Commission rate:</b> {{ existingStore().commissionRate }}%</span>
+          <span class="meta-row"><b>Verified:</b> {{ existingStore().isVerified ? 'Yes ✓' : 'Pending' }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Registration form -->
+  @else {
+    <div class="page-content">
+
+      <!-- Hero banner -->
+      <div class="hero-section">
+        <div class="hero-badge">🚀 Seller Program</div>
+        <h1 class="hero-title">Start Selling on NexaCommerce</h1>
+        <p class="hero-sub">Reach thousands of buyers. Set up your store in minutes and grow your business with our powerful multi-vendor platform.</p>
+
+        <div class="perks-grid">
+          <div class="perk">
+            <span class="perk-icon">💰</span>
+            <div>
+              <strong>Low Commission</strong>
+              <p>Just 10% per sale</p>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">📦</span>
+            <div>
+              <strong>Easy Management</strong>
+              <p>Full seller dashboard</p>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">🌍</span>
+            <div>
+              <strong>Wide Reach</strong>
+              <p>Access all platform buyers</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="form-card">
+        <div class="form-header">
+          <h2>Create Your Store</h2>
+          <p>Fill in your store details to apply. Our team will review and approve your application.</p>
+        </div>
+
+        <!-- Error -->
+        @if (errorMessage()) {
+          <div class="alert-error">
+            <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <!-- Success -->
+        @if (successMessage()) {
+          <div class="alert-success">
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()" class="store-form" *ngIf="!successMessage()">
+
+          <!-- Store Name -->
+          <div class="form-group">
+            <label class="form-label">Store Name <span class="required">*</span></label>
+            <input type="text"
+                   [(ngModel)]="storeName"
+                   name="storeName"
+                   required
+                   maxlength="200"
+                   placeholder="e.g. Tiger Electronics"
+                   class="form-input"
+                   (ngModelChange)="onStoreNameChange()" />
+            <span class="form-hint">This is the public name buyers will see.</span>
+          </div>
+
+          <!-- Slug -->
+          <div class="form-group">
+            <label class="form-label">Store URL Slug <span class="required">*</span></label>
+            <div class="slug-input-wrap">
+              <span class="slug-prefix">nexacommerce.com/store/</span>
+              <input type="text"
+                     [(ngModel)]="slug"
+                     name="slug"
+                     required
+                     maxlength="200"
+                     placeholder="tiger-electronics"
+                     class="form-input slug-input"
+                     (ngModelChange)="onSlugChange()" />
+            </div>
+            <span class="form-hint">Auto-generated from your store name. Only lowercase letters, numbers and hyphens.</span>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label">Store Description <span class="optional">(optional)</span></label>
+            <textarea
+              [(ngModel)]="description"
+              name="description"
+              rows="3"
+              maxlength="500"
+              placeholder="Tell buyers what you sell..."
+              class="form-input form-textarea"></textarea>
+          </div>
+
+          <!-- Tax Number -->
+          <div class="form-group">
+            <label class="form-label">Tax Number / GST <span class="optional">(optional)</span></label>
+            <input type="text"
+                   [(ngModel)]="taxNumber"
+                   name="taxNumber"
+                   maxlength="100"
+                   placeholder="e.g. GSTIN, VAT ID"
+                   class="form-input" />
+          </div>
+
+          <!-- Terms notice -->
+          <div class="terms-notice">
+            <svg class="notice-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Your store will start in <strong>Pending</strong> status and will be reviewed by our team before going live.
+          </div>
+
+          <button type="submit"
+                  [disabled]="loading() || !storeName.trim() || !slug.trim()"
+                  class="submit-btn">
+            @if (loading()) {
+              <svg class="loading-spinner" fill="none" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Submitting Application...
+            } @else {
+              🚀 Submit Store Application
+            }
+          </button>
+
+        </form>
+      </div>
+    </div>
+  }
+
+</div>
