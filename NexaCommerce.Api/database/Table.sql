@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
     `role_id` CHAR(36) NOT NULL,
     `role_name` VARCHAR(100) NULL,
     PRIMARY KEY (`user_id`, `role_id`),
-    KEY `ix_user_roles_role_name` (`role_name`),
-    CONSTRAINT `fk_user_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_user_roles_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+    KEY `ix_user_roles_user_id` (`user_id`),
+    KEY `ix_user_roles_role_id` (`role_id`),
+    KEY `ix_user_roles_role_name` (`role_name`)
 ) ENGINE=InnoDB;
 
 -- RolePermissions Junction Table
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS `role_permissions` (
     `role_id` CHAR(36) NOT NULL,
     `permission_id` CHAR(36) NOT NULL,
     PRIMARY KEY (`role_id`, `permission_id`),
-    CONSTRAINT `fk_role_permissions_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_role_permissions_permissions` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
+    KEY `ix_role_permissions_role_id` (`role_id`),
+    KEY `ix_role_permissions_permission_id` (`permission_id`)
 ) ENGINE=InnoDB;
 
 -- RefreshTokens Table
@@ -94,8 +94,7 @@ CREATE TABLE IF NOT EXISTS `refresh_tokens` (
     `reason_revoked` VARCHAR(256) NULL,
     PRIMARY KEY (`id`),
     KEY `ix_refresh_tokens_user_id` (`user_id`),
-    KEY `ix_refresh_tokens_token_hash` (`token_hash`),
-    CONSTRAINT `fk_refresh_tokens_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    KEY `ix_refresh_tokens_token_hash` (`token_hash`)
 ) ENGINE=InnoDB;
 
 -- UserSessions Table
@@ -109,8 +108,7 @@ CREATE TABLE IF NOT EXISTS `user_sessions` (
     `last_activity_at_utc` DATETIME(6) NOT NULL,
     `is_revoked` TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    KEY `ix_user_sessions_user_id` (`user_id`),
-    CONSTRAINT `fk_user_sessions_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    KEY `ix_user_sessions_user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
 -- MfaMethods Table
@@ -122,8 +120,7 @@ CREATE TABLE IF NOT EXISTS `mfa_methods` (
     `is_enabled` TINYINT(1) NOT NULL DEFAULT 0,
     `created_at_utc` DATETIME(6) NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `ix_mfa_methods_user_id` (`user_id`),
-    CONSTRAINT `fk_mfa_methods_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    KEY `ix_mfa_methods_user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
 -- SecurityEvents Table
@@ -221,7 +218,6 @@ CREATE TABLE IF NOT EXISTS `customers` (
     UNIQUE KEY `ux_customers_store_name` (`store_name`),
     UNIQUE KEY `ux_customers_slug` (`slug`),
     KEY `ix_customers_status` (`status`),
-    KEY `ix_customers_is_deleted` (`is_deleted`),
-    CONSTRAINT `fk_customers_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    KEY `ix_customers_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB;
 
