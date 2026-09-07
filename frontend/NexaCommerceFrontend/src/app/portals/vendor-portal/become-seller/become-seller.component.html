@@ -1,0 +1,139 @@
+<div class="seller-page">
+  <div class="seller-card">
+
+    <!-- Header -->
+    <div class="seller-header">
+      <div class="store-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+      <h1 class="page-title">Open Your Store on NexaCommerce</h1>
+      <p class="page-subtitle">
+        Join thousands of sellers. Fill in your store details below — our team will review and approve your application within 24 hours.
+      </p>
+    </div>
+
+    <!-- Auth guard notice -->
+    @if (!isAuthenticated()) {
+      <div class="auth-notice">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>You must <a routerLink="/auth/login" [queryParams]="{returnUrl: '/vendor/become-seller'}">sign in</a> or <a routerLink="/auth/register">create an account</a> first before opening a store.</span>
+      </div>
+    }
+
+    <!-- Success -->
+    @if (successMessage()) {
+      <div class="alert-success">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (errorMessage()) {
+      <div class="alert-error">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <!-- Form -->
+    @if (!successMessage()) {
+      <form (ngSubmit)="onSubmit()" class="seller-form">
+
+        <!-- Store Name -->
+        <div class="form-group">
+          <label class="form-label">Store Name <span class="required">*</span></label>
+          <input type="text"
+                 [(ngModel)]="storeName"
+                 (ngModelChange)="onStoreNameChange()"
+                 name="storeName"
+                 required
+                 placeholder="e.g. Apex Electronics Co."
+                 class="form-input" />
+          <p class="form-hint">This is your public brand name visible to buyers.</p>
+        </div>
+
+        <!-- Slug -->
+        <div class="form-group">
+          <label class="form-label">Store URL / Slug <span class="required">*</span></label>
+          <div class="slug-wrapper">
+            <span class="slug-prefix">nexacommerce.com/store/</span>
+            <input type="text"
+                   [(ngModel)]="slug"
+                   name="slug"
+                   required
+                   placeholder="apex-electronics"
+                   class="form-input slug-input" />
+          </div>
+          <p class="form-hint">Auto-generated from store name. Only lowercase letters, numbers, and hyphens.</p>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label">Store Description</label>
+          <textarea [(ngModel)]="description"
+                    name="description"
+                    rows="3"
+                    placeholder="Tell buyers what makes your store unique..."
+                    class="form-input form-textarea"></textarea>
+        </div>
+
+        <!-- Tax Number -->
+        <div class="form-group">
+          <label class="form-label">GST / VAT / Tax Number <span class="optional">(Optional)</span></label>
+          <input type="text"
+                 [(ngModel)]="taxNumber"
+                 name="taxNumber"
+                 placeholder="e.g. GST-1234567890"
+                 class="form-input" />
+          <p class="form-hint">Required for tax invoicing in some regions.</p>
+        </div>
+
+        <!-- Info box -->
+        <div class="info-box">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <div>
+            <p class="info-title">What happens after submission?</p>
+            <ul class="info-list">
+              <li>Your store is created with <strong>Pending</strong> status.</li>
+              <li>An admin reviews your application (usually within 24h).</li>
+              <li>Once <strong>Approved</strong>, you can start listing products.</li>
+              <li>Platform commission rate is <strong>10%</strong> by default.</li>
+            </ul>
+          </div>
+        </div>
+
+        <button type="submit"
+                [disabled]="loading() || !storeName || !slug || !isAuthenticated()"
+                class="submit-btn">
+          @if (loading()) {
+            <svg class="spinner" fill="none" viewBox="0 0 24 24">
+              <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <span>Submitting Application...</span>
+          } @else {
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <span>Submit Store Application</span>
+          }
+        </button>
+
+      </form>
+    }
+
+  </div>
+</div>
