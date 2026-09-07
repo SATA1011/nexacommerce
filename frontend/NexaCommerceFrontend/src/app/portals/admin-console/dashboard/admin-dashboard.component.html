@@ -7,134 +7,308 @@
         <span class="authority-badge">
           Platform Master Authority
         </span>
-        <span class="env-tag">Environment: Production (ASP.NET Core 10 + MySQL 8.4)</span>
+        <span class="env-tag">SuperAdmin Console • Production API</span>
       </div>
-      <h1 class="banner-title">Platform Operations Console</h1>
+      <h1 class="banner-title">Operations & Identity Management</h1>
       <p class="banner-subtitle">
-        SuperAdmin / Operations Manager • Logged in as {{ authService.currentUser()?.email || 'admin@nexacommerce.internal' }}
+        Logged in as <strong>{{ authService.currentUser()?.email || 'texastiger1010@gmail.com' }}</strong>
       </p>
     </div>
 
     <div class="banner-actions">
       <div class="system-health-badge">
         <span class="health-dot"></span>
-        <span>All Services Healthy</span>
+        <span>MySQL Live Connected</span>
       </div>
     </div>
   </div>
 
-  <!-- High-Level Platform Statistics -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span>Marketplace GMV</span>
-        <span class="kpi-trend trend-purple">+24.8% MoM</span>
-      </div>
-      <div class="kpi-value">$1,420,850</div>
-      <p class="kpi-subtext">Platform Commission: $120,772.25</p>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span>Onboarded Merchants</span>
-        <span class="kpi-trend trend-emerald">3 Pending</span>
-      </div>
-      <div class="kpi-value">284</div>
-      <p class="kpi-subtext">Active storefronts selling</p>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span>Customer Accounts</span>
-        <span class="kpi-trend trend-indigo">+410 Today</span>
-      </div>
-      <div class="kpi-value">48,920</div>
-      <p class="kpi-subtext">Registered buyer base</p>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span>Active JWT Sessions</span>
-        <span class="kpi-trend trend-emerald">Secure</span>
-      </div>
-      <div class="kpi-value">3,892</div>
-      <p class="kpi-subtext">Zero security incidents detected</p>
-    </div>
+  <!-- Dashboard Navigation Tabs -->
+  <div class="admin-nav-tabs">
+    <button 
+      class="nav-tab-btn" 
+      [class.active]="activeTab() === 'users'"
+      (click)="activeTab.set('users')">
+      <span class="tab-icon">👥</span>
+      <span>User & Role Management</span>
+      <span class="tab-counter">{{ totalUsers() }}</span>
+    </button>
+    <button 
+      class="nav-tab-btn" 
+      [class.active]="activeTab() === 'overview'"
+      (click)="activeTab.set('overview')">
+      <span class="tab-icon">📊</span>
+      <span>Platform Overview</span>
+    </button>
   </div>
 
-  <!-- Two Column Layout: Pending KYC/Store Approvals + System Architecture Health -->
-  <div class="dashboard-columns">
-    
-    <!-- Pending Merchant Onboarding Approvals -->
-    <div class="section-panel">
-      <div class="panel-header">
-        <div>
-          <h3 class="panel-title">Pending Merchant Applications</h3>
-          <p class="panel-subtitle">Review tax ID and business legitimacy before granting Vendor role</p>
+  <!-- ================= TAB 1: USERS & ROLES MANAGEMENT ================= -->
+  @if (activeTab() === 'users') {
+    <div class="management-section">
+      
+      <!-- Controls Toolbar -->
+      <div class="toolbar-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchTerm" 
+            (keyup.enter)="onSearch()"
+            placeholder="Search users by name or email..." 
+            class="search-input" />
+          <button class="search-btn" (click)="onSearch()">Search</button>
         </div>
-        <span class="pending-pill">3 Pending</span>
+
+        <div class="toolbar-actions">
+          <button class="refresh-btn" (click)="loadUsers()" [disabled]="loadingUsers()">
+            <span class="refresh-icon" [class.spinning]="loadingUsers()">↻</span>
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
-      <div class="applications-list">
-        @for (app of pendingApplications; track app.id) {
-          <div class="app-row">
-            <div>
-              <div class="store-name">{{ app.storeName }}</div>
-              <div class="owner-info">{{ app.ownerName }} • {{ app.email }}</div>
-              <div class="tax-id">Tax ID: {{ app.taxNumber }}</div>
-            </div>
+      <!-- Users Table Card -->
+      <div class="table-card">
+        <div class="table-header-title">
+          <div>
+            <h2 class="table-title">Registered Platform Users</h2>
+            <p class="table-subtitle">Manage roles, permissions, and security status for all users</p>
+          </div>
+          <span class="count-pill">{{ totalUsers() }} Total Users</span>
+        </div>
 
-            <div class="action-btns">
-              <button class="approve-btn">
-                Approve
-              </button>
-              <button class="review-btn">
-                Review
-              </button>
-            </div>
+        @if (loadingUsers()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading users from Clever Cloud database...</p>
+          </div>
+        } @else if (users().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon">👤</span>
+            <h3>No users found</h3>
+            <p>No user records matched your search query.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User Details</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Assigned Roles</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of users(); track user.id) {
+                  <tr class="table-row">
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar-circle">
+                          {{ getInitials(user.firstName, user.lastName) }}
+                        </div>
+                        <div>
+                          <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+                          <div class="user-email">{{ user.email }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="phone-text">{{ user.phoneNumber || '—' }}</span>
+                    </td>
+                    <td>
+                      @if (user.isActive) {
+                        <span class="status-badge active-status">Active</span>
+                      } @else {
+                        <span class="status-badge inactive-status">Inactive</span>
+                      }
+                    </td>
+                    <td>
+                      <div class="roles-tags-container">
+                        @if (user.roles && user.roles.length > 0) {
+                          @for (role of user.roles; track role) {
+                            <span 
+                              class="role-pill"
+                              [class.role-superadmin]="role.toLowerCase() === 'superadmin'"
+                              [class.role-admin]="role.toLowerCase() === 'admin'"
+                              [class.role-vendor]="role.toLowerCase() === 'vendor'"
+                              [class.role-customer]="role.toLowerCase() === 'customer'"
+                              [class.role-user]="role.toLowerCase() === 'user'">
+                              {{ role }}
+                            </span>
+                          }
+                        } @else {
+                          <span class="no-roles-text">No roles assigned</span>
+                        }
+                      </div>
+                    </td>
+                    <td class="text-right">
+                      <button class="manage-btn" (click)="openRoleModal(user)">
+                        <span>⚙️</span>
+                        <span>Manage Roles</span>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         }
       </div>
     </div>
+  }
 
-    <!-- Infrastructure & Observability Metrics -->
-    <div class="section-panel">
-      <h3 class="panel-title-bordered">
-        System & Infrastructure Telemetry
-      </h3>
-
-      <div class="telemetry-grid">
-        <div class="telemetry-card">
-          <span class="metric-label">MySQL Connection Pool</span>
-          <div class="metric-value">12 / 100</div>
-          <p class="metric-status healthy">Healthy latency: 1.2ms</p>
+  <!-- ================= TAB 2: PLATFORM OVERVIEW ================= -->
+  @if (activeTab() === 'overview') {
+    <!-- High-Level Platform Statistics -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>Marketplace GMV</span>
+          <span class="kpi-trend trend-purple">+24.8% MoM</span>
         </div>
-
-        <div class="telemetry-card">
-          <span class="metric-label">Redis Cache Hit Rate</span>
-          <div class="metric-value">94.2%</div>
-          <p class="metric-status healthy">Catalog cached in RAM</p>
-        </div>
-
-        <div class="telemetry-card">
-          <span class="metric-label">RabbitMQ Message Queue</span>
-          <div class="metric-value">0 Lag</div>
-          <p class="metric-status info">Workers processing async</p>
-        </div>
-
-        <div class="telemetry-card">
-          <span class="metric-label">YARP Gateway Proxy</span>
-          <div class="metric-value">HTTP/2</div>
-          <p class="metric-status purple">Distributed Tracing Active</p>
-        </div>
+        <div class="kpi-value">$1,420,850</div>
+        <p class="kpi-subtext">Platform Commission: $120,772.25</p>
       </div>
 
-      <div class="roles-banner">
-        <span>Identity Roles & Permissions Database</span>
-        <span class="roles-link">Manage Roles API &rarr;</span>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>Onboarded Merchants</span>
+          <span class="kpi-trend trend-emerald">3 Pending</span>
+        </div>
+        <div class="kpi-value">284</div>
+        <p class="kpi-subtext">Active storefronts selling</p>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>Customer Accounts</span>
+          <span class="kpi-trend trend-indigo">{{ totalUsers() }} Registered</span>
+        </div>
+        <div class="kpi-value">{{ totalUsers() }}</div>
+        <p class="kpi-subtext">Registered user accounts</p>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>System Roles Available</span>
+          <span class="kpi-trend trend-emerald">Configured</span>
+        </div>
+        <div class="kpi-value">{{ roles().length }}</div>
+        <p class="kpi-subtext">Active access profiles</p>
       </div>
     </div>
 
-  </div>
+    <!-- Merchant Applications List -->
+    <div class="dashboard-columns">
+      <div class="section-panel">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">Pending Merchant Applications</h3>
+            <p class="panel-subtitle">Review business legitimacy before granting Vendor role</p>
+          </div>
+          <span class="pending-pill">3 Pending</span>
+        </div>
+
+        <div class="applications-list">
+          @for (app of pendingApplications; track app.id) {
+            <div class="app-row">
+              <div>
+                <div class="store-name">{{ app.storeName }}</div>
+                <div class="owner-info">{{ app.ownerName }} • {{ app.email }}</div>
+                <div class="tax-id">Tax ID: {{ app.taxNumber }}</div>
+              </div>
+
+              <div class="action-btns">
+                <button class="approve-btn">Approve</button>
+                <button class="review-btn">Review</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ================= ROLE ASSIGNMENT MODAL ================= -->
+  @if (selectedUser()) {
+    <div class="modal-backdrop" (click)="closeRoleModal()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        
+        <div class="modal-header">
+          <div>
+            <h3 class="modal-title">Manage User Roles</h3>
+            <p class="modal-subtitle">Assign or revoke system privileges for this account</p>
+          </div>
+          <button class="close-btn" (click)="closeRoleModal()">✕</button>
+        </div>
+
+        <div class="modal-user-summary">
+          <div class="modal-avatar">
+            {{ getInitials(selectedUser()!.firstName, selectedUser()!.lastName) }}
+          </div>
+          <div>
+            <div class="modal-user-name">{{ selectedUser()!.firstName }} {{ selectedUser()!.lastName }}</div>
+            <div class="modal-user-email">{{ selectedUser()!.email }}</div>
+            <div class="modal-user-id">User ID: {{ selectedUser()!.id }}</div>
+          </div>
+        </div>
+
+        <!-- Feedback Alert -->
+        @if (modalFeedback()) {
+          <div class="modal-alert" [class.alert-success]="modalFeedback()!.type === 'success'" [class.alert-error]="modalFeedback()!.type === 'error'">
+            {{ modalFeedback()!.message }}
+          </div>
+        }
+
+        <!-- Roles Toggle Grid -->
+        <div class="roles-selection-section">
+          <h4 class="roles-heading">Available System Roles</h4>
+          
+          @if (modalLoading()) {
+            <div class="modal-spinner-wrapper">
+              <div class="spinner"></div>
+              <span>Processing role update...</span>
+            </div>
+          }
+
+          <div class="roles-list-grid">
+            @for (role of roles(); track role.id) {
+              <div class="role-card" [class.assigned]="hasRole(role.name)">
+                <div class="role-info">
+                  <div class="role-title-row">
+                    <span class="role-name-text">{{ role.name }}</span>
+                    @if (hasRole(role.name)) {
+                      <span class="active-badge">Assigned</span>
+                    }
+                  </div>
+                  <p class="role-desc">{{ role.description || 'System access role' }}</p>
+                </div>
+
+                <button 
+                  class="role-toggle-btn"
+                  [class.btn-revoke]="hasRole(role.name)"
+                  [class.btn-assign]="!hasRole(role.name)"
+                  [disabled]="modalLoading()"
+                  (click)="toggleRole(role)">
+                  @if (hasRole(role.name)) {
+                    Revoke Role
+                  } @else {
+                    + Assign Role
+                  }
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="done-btn" (click)="closeRoleModal()">Done</button>
+        </div>
+
+      </div>
+    </div>
+  }
 
 </div>

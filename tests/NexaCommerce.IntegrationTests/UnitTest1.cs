@@ -1,4 +1,4 @@
-﻿namespace NexaCommerce.IntegrationTests;
+namespace NexaCommerce.IntegrationTests;
 
 public class UnitTest1
 {

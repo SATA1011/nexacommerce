@@ -45,8 +45,32 @@ export class TokenStorageService {
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
       this.tokenSignal.set(accessToken);
+
+      // Extract embedded roles from JWT payload
+      const extractedRoles = this.extractRolesFromJwt(accessToken);
+      if (extractedRoles.length > 0) {
+        this.saveRoles(extractedRoles);
+      }
     } catch (e) {
       console.error('Failed to store tokens in localStorage', e);
+    }
+  }
+
+  private extractRolesFromJwt(token: string): string[] {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return [];
+      const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(decodeURIComponent(escape(atob(payloadBase64))));
+      const roleClaim = decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] 
+                     || decodedPayload['role'] 
+                     || decodedPayload['roles'];
+
+      if (!roleClaim) return [];
+      if (Array.isArray(roleClaim)) return roleClaim;
+      return [String(roleClaim)];
+    } catch {
+      return [];
     }
   }
 
