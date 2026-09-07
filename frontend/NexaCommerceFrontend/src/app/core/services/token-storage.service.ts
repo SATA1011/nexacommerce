@@ -74,12 +74,14 @@ export class TokenStorageService {
     }
   }
 
-  saveUser(user: UserResponse, roles: string[] = []): void {
+  saveUser(user: UserResponse, roles?: string[]): void {
     try {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
-      localStorage.setItem(USER_ROLES_KEY, JSON.stringify(roles));
       this.userSignal.set(user);
-      this.rolesSignal.set(roles);
+      if (roles && roles.length > 0) {
+        localStorage.setItem(USER_ROLES_KEY, JSON.stringify(roles));
+        this.rolesSignal.set(roles);
+      }
     } catch (e) {
       console.error('Failed to store user profile in localStorage', e);
     }
@@ -133,7 +135,10 @@ export class TokenStorageService {
   private getStoredRoles(): string[] {
     try {
       const data = localStorage.getItem(USER_ROLES_KEY);
-      return data ? JSON.parse(data) : [];
+      const parsed = data ? JSON.parse(data) : [];
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      const token = this.getStoredAccessToken();
+      return token ? this.extractRolesFromJwt(token) : [];
     } catch {
       return [];
     }

@@ -81,9 +81,9 @@ export class AuthService {
   }
 
   fetchUserRoles(userId: string): Observable<string[]> {
-    return this.http.get<string[]>(`${this.rolesUrl}/user-roles/${userId}`).pipe(
+    return this.http.post<string[]>(`${this.rolesUrl}/get-user-roles`, { id: userId }).pipe(
       tap((roles) => {
-        if (Array.isArray(roles)) {
+        if (Array.isArray(roles) && roles.length > 0) {
           this.tokenStorage.saveRoles(roles);
         }
       }),
