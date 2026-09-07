@@ -199,8 +199,8 @@ CREATE TABLE IF NOT EXISTS `idempotency_records` (
     KEY `ix_idempotency_records_expires` (`expires_at_utc`)
 ) ENGINE=InnoDB;
 
--- Customers Table (Seller / Merchant Store Profiles)
-CREATE TABLE IF NOT EXISTS `customers` (
+-- Vendors Table (Seller / Merchant Store Profiles)
+CREATE TABLE IF NOT EXISTS `vendors` (
     `id` CHAR(36) NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `store_name` VARCHAR(200) NOT NULL,
@@ -214,10 +214,10 @@ CREATE TABLE IF NOT EXISTS `customers` (
     `updated_at_utc` DATETIME(6) NULL,
     `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `ux_customers_user_id` (`user_id`),
-    UNIQUE KEY `ux_customers_store_name` (`store_name`),
-    UNIQUE KEY `ux_customers_slug` (`slug`),
-    KEY `ix_customers_status` (`status`),
-    KEY `ix_customers_is_deleted` (`is_deleted`)
+    UNIQUE KEY `ux_vendors_user_id` (`user_id`),
+    UNIQUE KEY `ux_vendors_store_name` (`store_name`),
+    UNIQUE KEY `ux_vendors_slug` (`slug`),
+    KEY `ix_vendors_status` (`status`),
+    KEY `ix_vendors_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB;
 

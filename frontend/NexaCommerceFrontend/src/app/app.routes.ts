@@ -4,7 +4,6 @@ import { CatalogComponent } from './portals/storefront/catalog/catalog.component
 import { LoginComponent } from './portals/auth/login/login.component';
 import { RegisterComponent } from './portals/auth/register/register.component';
 import { VendorDashboardComponent } from './portals/vendor-portal/dashboard/vendor-dashboard.component';
-import { BecomeSellerComponent } from './portals/vendor-portal/become-seller/become-seller.component';
 import { AdminDashboardComponent } from './portals/admin-console/dashboard/admin-dashboard.component';
 import { roleGuard } from './core/guards/role.guard';
 
@@ -31,13 +30,6 @@ export const routes: Routes = [
     path: 'auth/register',
     component: RegisterComponent,
     title: 'Create Account — NexaCommerce'
-  },
-
-  // Become a Seller (public, but guards inside component if not logged in)
-  {
-    path: 'become-seller',
-    component: BecomeSellerComponent,
-    title: 'Become a Seller — NexaCommerce'
   },
 
   // Seller / Vendor Portal (Protected)

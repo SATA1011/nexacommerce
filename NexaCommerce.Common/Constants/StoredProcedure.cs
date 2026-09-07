@@ -49,11 +49,11 @@ public static class StoredProcedure
     public const string IdempotencyRecordsGet = "IdempotencyRecord_Get";
     public const string IdempotencyRecordsInsertUpdate = "IdempotencyRecord_InsertUpdate";
 
-    // Customers (Sellers / Stores)
-    public const string CustomersGet = "Customer_Get";
-    public const string CustomersGetById = "Customer_Get";
-    public const string CustomersGetByUserId = "Customer_GetByUserId";
-    public const string CustomersGetAll = "Customer_GetAll";
-    public const string CustomersInsertUpdate = "Customer_InsertUpdate";
-    public const string CustomersUpdateStatus = "Customer_UpdateStatus";
+    // Vendors (Sellers / Stores)
+    public const string VendorsGet = "Vendor_Get";
+    public const string VendorsGetById = "Vendor_Get";
+    public const string VendorsGetByUserId = "Vendor_GetByUserId";
+    public const string VendorsGetAll = "Vendor_GetAll";
+    public const string VendorsInsertUpdate = "Vendor_InsertUpdate";
+    public const string VendorsUpdateStatus = "Vendor_UpdateStatus";
 }

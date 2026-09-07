@@ -733,13 +733,13 @@ BEGIN
 END //
 
 -- =============================================================================
--- 9. `customers` Stored Procedures (Seller / Merchant Store Profiles)
+-- 9. `vendors` Stored Procedures (Seller / Merchant Store Profiles)
 -- =============================================================================
 
--- Get Customer Store by ID
-DROP PROCEDURE IF EXISTS `Customer_GetById` //
-DROP PROCEDURE IF EXISTS `Customer_Get` //
-CREATE PROCEDURE `Customer_Get`(
+-- Get Vendor Store by ID
+DROP PROCEDURE IF EXISTS `Vendor_GetById` //
+DROP PROCEDURE IF EXISTS `Vendor_Get` //
+CREATE PROCEDURE `Vendor_Get`(
     IN `p_id` CHAR(36)
 )
 BEGIN
@@ -756,13 +756,13 @@ BEGIN
         c.`created_at_utc`,
         c.`updated_at_utc`,
         c.`is_deleted`
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`id` = `p_id` AND c.`is_deleted` = 0;
 END //
 
--- Get Customer Store by User ID
-DROP PROCEDURE IF EXISTS `Customer_GetByUserId` //
-CREATE PROCEDURE `Customer_GetByUserId`(
+-- Get Vendor Store by User ID
+DROP PROCEDURE IF EXISTS `Vendor_GetByUserId` //
+CREATE PROCEDURE `Vendor_GetByUserId`(
     IN `p_user_id` CHAR(36)
 )
 BEGIN
@@ -779,13 +779,13 @@ BEGIN
         c.`created_at_utc`,
         c.`updated_at_utc`,
         c.`is_deleted`
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`user_id` = `p_user_id` AND c.`is_deleted` = 0;
 END //
 
--- Get All Customer Stores with Pagination, Search Term & Status Filter
-DROP PROCEDURE IF EXISTS `Customer_GetAll` //
-CREATE PROCEDURE `Customer_GetAll`(
+-- Get All Vendor Stores with Pagination, Search Term & Status Filter
+DROP PROCEDURE IF EXISTS `Vendor_GetAll` //
+CREATE PROCEDURE `Vendor_GetAll`(
     IN `p_search_term` VARCHAR(200),
     IN `p_status` VARCHAR(50),
     IN `p_page_number` INT,
@@ -797,7 +797,7 @@ BEGIN
 
     -- Total Count
     SELECT COUNT(1)
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`is_deleted` = 0
       AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
       AND (`p_status` IS NULL OR c.`status` = `p_status`);
@@ -816,7 +816,7 @@ BEGIN
         c.`created_at_utc`,
         c.`updated_at_utc`,
         c.`is_deleted`
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`is_deleted` = 0
       AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
       AND (`p_status` IS NULL OR c.`status` = `p_status`)
@@ -824,9 +824,9 @@ BEGIN
     LIMIT `v_offset`, `p_page_size`;
 END //
 
--- Insert or Update Customer Store via JSON Payload
-DROP PROCEDURE IF EXISTS `Customer_InsertUpdate` //
-CREATE PROCEDURE `Customer_InsertUpdate`(
+-- Insert or Update Vendor Store via JSON Payload
+DROP PROCEDURE IF EXISTS `Vendor_InsertUpdate` //
+CREATE PROCEDURE `Vendor_InsertUpdate`(
     IN `p_json` LONGTEXT
 )
 BEGIN
@@ -850,7 +850,7 @@ BEGIN
     SET `v_status` = COALESCE(JSON_UNQUOTE(JSON_EXTRACT(`p_json`, '$.status')), 'Pending');
     SET `v_is_verified` = COALESCE(JSON_EXTRACT(`p_json`, '$.is_verified'), 0);
 
-    INSERT INTO `customers` (
+    INSERT INTO `vendors` (
         `id`, `user_id`, `store_name`, `slug`, `description`, `tax_number`, `commission_rate`, `status`, `is_verified`, `created_at_utc`, `is_deleted`
     ) VALUES (
         `v_id`, `v_user_id`, `v_store_name`, `v_slug`, `v_description`, `v_tax_number`, `v_commission_rate`, `v_status`, `v_is_verified`, UTC_TIMESTAMP(6), 0
@@ -878,19 +878,19 @@ BEGIN
         c.`created_at_utc`,
         c.`updated_at_utc`,
         c.`is_deleted`
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`id` = `v_id`;
 END //
 
--- Update Customer Store Status (Admin Approval / Rejection / Suspension)
-DROP PROCEDURE IF EXISTS `Customer_UpdateStatus` //
-CREATE PROCEDURE `Customer_UpdateStatus`(
+-- Update Vendor Store Status (Admin Approval / Rejection / Suspension)
+DROP PROCEDURE IF EXISTS `Vendor_UpdateStatus` //
+CREATE PROCEDURE `Vendor_UpdateStatus`(
     IN `p_id` CHAR(36),
     IN `p_status` VARCHAR(50),
     IN `p_is_verified` TINYINT(1)
 )
 BEGIN
-    UPDATE `customers`
+    UPDATE `vendors`
     SET 
         `status` = `p_status`,
         `is_verified` = `p_is_verified`,
@@ -910,7 +910,7 @@ BEGIN
         c.`created_at_utc`,
         c.`updated_at_utc`,
         c.`is_deleted`
-    FROM `customers` c
+    FROM `vendors` c
     WHERE c.`id` = `p_id`;
 END //
 

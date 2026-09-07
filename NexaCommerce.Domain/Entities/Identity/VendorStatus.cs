@@ -1,6 +1,6 @@
 namespace NexaCommerce.Domain.Entities.Identity;
 
-public enum CustomerStatus
+public enum VendorStatus
 {
     Pending,
     Approved,

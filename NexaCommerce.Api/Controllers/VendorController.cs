@@ -11,28 +11,28 @@ namespace NexaCommerce.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public sealed class CustomerController : ControllerBase
+public sealed class VendorController : ControllerBase
 {
-    private readonly ICustomerRepository _customerRepository;
+    private readonly IVendorRepository _vendorRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IUserRepository _userRepository;
-    private readonly ILogger<CustomerController> _logger;
+    private readonly ILogger<VendorController> _logger;
 
 
-    public CustomerController(
-        ICustomerRepository customerRepository,
+    public VendorController(
+        IVendorRepository vendorRepository,
         IRoleRepository roleRepository,
         IUserRepository userRepository,
-        ILogger<CustomerController> logger)
+        ILogger<VendorController> logger)
     {
-        _customerRepository = customerRepository;
+        _vendorRepository = vendorRepository;
         _roleRepository = roleRepository;
         _userRepository = userRepository;
         _logger = logger;
     }
 
     /// <summary>
-    /// Register / Apply to become a customer seller with a store profile (Customer store onboarding)
+    /// Register / Apply to become a vendor with a store profile (Vendor store onboarding)
     /// </summary>
     [Authorize]
     [HttpPost("register-store")]
@@ -40,7 +40,7 @@ public sealed class CustomerController : ControllerBase
     {
         try
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? User.FindFirst("sub")?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
@@ -53,13 +53,13 @@ public sealed class CustomerController : ControllerBase
                 return BadRequest(new { message = "Store name and slug are required." });
             }
 
-            var existingStore = await _customerRepository.GetByUserIdAsync(userId, cancellationToken);
+            var existingStore = await _vendorRepository.GetByUserIdAsync(userId, cancellationToken);
             if (existingStore is not null)
             {
                 return BadRequest(new { message = "You have already registered a store.", storeId = existingStore.Id });
             }
 
-            var newCustomerStore = new Customer
+            var newVendorStore = new Vendor
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
@@ -68,29 +68,29 @@ public sealed class CustomerController : ControllerBase
                 Description = request.Description?.Trim(),
                 TaxNumber = request.TaxNumber?.Trim(),
                 CommissionRate = 10.00m,
-                Status = CustomerStatus.Pending.ToString(),
+                Status = VendorStatus.Pending.ToString(),
                 IsVerified = false,
                 CreatedAtUtc = DateTime.UtcNow
             };
 
-            var createdStore = await _customerRepository.InsertOrUpdateAsync(newCustomerStore, cancellationToken);
+            var createdStore = await _vendorRepository.InsertOrUpdateAsync(newVendorStore, cancellationToken);
 
-            // Assign Customer role (seller privileges) to user
+            // Assign Vendor role to user
             try
             {
-                var customerRole = await _roleRepository.GetByNameAsync("Customer", cancellationToken);
-                if (customerRole is not null)
+                var vendorRole = await _roleRepository.GetByNameAsync("Vendor", cancellationToken);
+                if (vendorRole is not null)
                 {
-                    await _roleRepository.AssignRoleToUserAsync(userId, customerRole.Id, cancellationToken);
+                    await _roleRepository.AssignRoleToUserAsync(userId, vendorRole.Id, cancellationToken);
                 }
                 else
                 {
-                    _logger.LogWarning("Customer role not found in database when registering store for user {UserId}.", userId);
+                    _logger.LogWarning("Vendor role not found in database when registering store for user {UserId}.", userId);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Could not assign Customer role to user {UserId}.", userId);
+                _logger.LogWarning(ex, "Could not assign Vendor role to user {UserId}.", userId);
             }
 
             _logger.LogInformation("Store '{StoreName}' registered successfully for User {UserId} in Pending status.", createdStore.StoreName, userId);
@@ -106,7 +106,7 @@ public sealed class CustomerController : ControllerBase
     }
 
     /// <summary>
-    /// Get the logged-in customer's registered store profile
+    /// Get the logged-in vendor's registered store profile
     /// </summary>
     [Authorize]
     [HttpPost("my-store")]
@@ -114,7 +114,7 @@ public sealed class CustomerController : ControllerBase
     {
         try
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? User.FindFirst("sub")?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
@@ -122,7 +122,7 @@ public sealed class CustomerController : ControllerBase
                 return Unauthorized(new { message = "Invalid user identity in token." });
             }
 
-            var store = await _customerRepository.GetByUserIdAsync(userId, cancellationToken);
+            var store = await _vendorRepository.GetByUserIdAsync(userId, cancellationToken);
             if (store is null)
             {
                 return NotFound(new { message = "No store profile found for the current user." });
@@ -146,7 +146,7 @@ public sealed class CustomerController : ControllerBase
     {
         try
         {
-            var (stores, totalCount) = await _customerRepository.GetAllAsync(
+            var (stores, totalCount) = await _vendorRepository.GetAllAsync(
                 request.SearchTerm,
                 request.Status,
                 request.PageNumber,
@@ -184,7 +184,7 @@ public sealed class CustomerController : ControllerBase
                 return BadRequest(new { message = "Status is required (Pending, Approved, Rejected, Suspended)." });
             }
 
-            var updatedStore = await _customerRepository.UpdateStatusAsync(
+            var updatedStore = await _vendorRepository.UpdateStatusAsync(
                 request.StoreId,
                 request.Status.Trim(),
                 request.IsVerified,
@@ -206,7 +206,7 @@ public sealed class CustomerController : ControllerBase
         }
     }
 
-    private static StoreResponse MapToStoreResponse(Customer store) =>
+    private static StoreResponse MapToStoreResponse(Vendor store) =>
         new()
         {
             Id = store.Id,

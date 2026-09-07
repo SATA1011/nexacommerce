@@ -18,7 +18,7 @@ public sealed class AccountController : ControllerBase
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserSessionRepository _userSessionRepository;
     private readonly IRoleRepository _roleRepository;
-    private readonly ICustomerRepository _customerRepository;
+    private readonly IVendorRepository _vendorRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ILogger<AccountController> _logger;
@@ -29,7 +29,7 @@ public sealed class AccountController : ControllerBase
         IRefreshTokenRepository refreshTokenRepository,
         IUserSessionRepository userSessionRepository,
         IRoleRepository roleRepository,
-        ICustomerRepository customerRepository,
+        IVendorRepository vendorRepository,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         ILogger<AccountController> logger)
@@ -38,7 +38,7 @@ public sealed class AccountController : ControllerBase
         _refreshTokenRepository = refreshTokenRepository;
         _userSessionRepository = userSessionRepository;
         _roleRepository = roleRepository;
-        _customerRepository = customerRepository;
+        _vendorRepository = vendorRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
         _logger = logger;
@@ -69,8 +69,8 @@ public sealed class AccountController : ControllerBase
             }
 
             var userRoles = await _roleRepository.GetRoleNamesByUserIdAsync(user.Id, cancellationToken);
-            var customer = await _customerRepository.GetByUserIdAsync(user.Id, cancellationToken);
-            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, customer?.Id);
+            var vendor = await _vendorRepository.GetByUserIdAsync(user.Id, cancellationToken);
+            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, vendor?.Id);
             var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
             var expiresAt = DateTime.UtcNow.AddMinutes(60);
 
@@ -144,8 +144,8 @@ public sealed class AccountController : ControllerBase
 
             var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
             var userRoles = await _roleRepository.GetRoleNamesByUserIdAsync(user.Id, cancellationToken);
-            var customer = await _customerRepository.GetByUserIdAsync(user.Id, cancellationToken);
-            var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, customer?.Id);
+            var vendor = await _vendorRepository.GetByUserIdAsync(user.Id, cancellationToken);
+            var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(user, userRoles, vendor?.Id);
             var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
             var newTokenHash = HashToken(newRefreshToken);
 
