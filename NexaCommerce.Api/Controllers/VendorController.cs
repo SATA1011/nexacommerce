@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexaCommerce.Contracts.Common;
@@ -16,6 +17,7 @@ public sealed class VendorController : ControllerBase
     private readonly IVendorRepository _vendorRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly ILogger<VendorController> _logger;
 
 
@@ -23,12 +25,132 @@ public sealed class VendorController : ControllerBase
         IVendorRepository vendorRepository,
         IRoleRepository roleRepository,
         IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
         ILogger<VendorController> logger)
     {
         _vendorRepository = vendorRepository;
         _roleRepository = roleRepository;
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
         _logger = logger;
+    }
+
+    /// <summary>
+    /// Guest merchant onboarding: creates user account, assigns Vendor role, and creates store profile in Pending status
+    /// </summary>
+    [HttpPost("register")]
+    [HttpPost("register-vendor")]
+    public async Task<IActionResult> Register([FromBody] RegisterVendorRequest request, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest(new { message = "Email and Password are required." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.LastName))
+            {
+                return BadRequest(new { message = "First name and last name are required." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.StoreName))
+            {
+                return BadRequest(new { message = "Store name is required." });
+            }
+
+            var existingUser = await _userRepository.GetByEmailAsync(request.Email.Trim(), cancellationToken);
+            if (existingUser is not null)
+            {
+                return BadRequest(new { message = $"User with email '{request.Email}' already exists." });
+            }
+
+            var passwordHash = _passwordHasher.HashPassword(request.Password);
+
+            var newUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = request.Email.Trim(),
+                NormalizedEmail = request.Email.Trim().ToUpperInvariant(),
+                FirstName = request.FirstName.Trim(),
+                LastName = request.LastName.Trim(),
+                PasswordHash = passwordHash,
+                PhoneNumber = request.PhoneNumber?.Trim(),
+                IsActive = true,
+                IsEmailConfirmed = false,
+                IsDeleted = false,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            var createdUser = await _userRepository.InsertOrUpdateAsync(newUser, cancellationToken);
+
+            // Assign Vendor and User roles
+            try
+            {
+                var vendorRole = await _roleRepository.GetByNameAsync("Vendor", cancellationToken);
+                if (vendorRole is not null)
+                {
+                    await _roleRepository.AssignRoleToUserAsync(createdUser.Id, vendorRole.Id, cancellationToken);
+                }
+                else
+                {
+                    _logger.LogWarning("Vendor role not found in database for user {UserId}.", createdUser.Id);
+                }
+
+                var userRole = await _roleRepository.GetByNameAsync("User", cancellationToken);
+                if (userRole is not null)
+                {
+                    await _roleRepository.AssignRoleToUserAsync(createdUser.Id, userRole.Id, cancellationToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not assign roles to user {UserId}.", createdUser.Id);
+            }
+
+            // Generate clean URL slug from store name
+            var baseSlug = Regex.Replace(request.StoreName.Trim().ToLowerInvariant(), @"[^a-z0-9\s-]", "");
+            var slug = Regex.Replace(baseSlug, @"\s+", "-").Trim('-');
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                slug = $"store-{Guid.NewGuid().ToString()[..8]}";
+            }
+
+            // Create vendor store profile
+            var newVendorStore = new Vendor
+            {
+                Id = Guid.NewGuid(),
+                UserId = createdUser.Id,
+                StoreName = request.StoreName.Trim(),
+                Slug = slug,
+                Description = !string.IsNullOrWhiteSpace(request.BusinessAddress)
+                    ? $"Address: {request.BusinessAddress.Trim()}"
+                    : null,
+                TaxNumber = request.TaxNumber?.Trim(),
+                CommissionRate = 10.00m,
+                Status = VendorStatus.Pending.ToString(),
+                IsVerified = false,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            var createdStore = await _vendorRepository.InsertOrUpdateAsync(newVendorStore, cancellationToken);
+
+            _logger.LogInformation("Successfully registered merchant account {Email} ({UserId}) with store '{StoreName}' ({StoreId})",
+                createdUser.Email, createdUser.Id, createdStore.StoreName, createdStore.Id);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Merchant registration submitted successfully. Your store is pending administrator review.",
+                userId = createdUser.Id,
+                store = MapToStoreResponse(createdStore)
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while registering merchant account {Email}", request.Email);
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An internal server error occurred while registering the merchant account.", detail = ex.Message });
+        }
     }
 
     /// <summary>

@@ -21,6 +21,7 @@ export class AuthService {
   private readonly tokenStorage = inject(TokenStorageService);
   private readonly baseUrl = `${environment.apiUrl}/Account`;
   private readonly rolesUrl = `${environment.apiUrl}/Roles`;
+  private readonly vendorUrl = `${environment.apiUrl}/Vendor`;
 
   // Expose signals from tokenStorage
   readonly currentUser = this.tokenStorage.currentUser;
@@ -32,11 +33,9 @@ export class AuthService {
       tap((res) => {
         if (res && res.accessToken) {
           this.tokenStorage.saveTokens(res.accessToken, res.refreshToken);
-          if (res.user) {
-            this.tokenStorage.saveUser(res.user);
-            // Fetch user roles to populate permission signals
-            this.fetchUserRoles(res.user.id).subscribe();
-          }
+          this.tokenStorage.saveUser(res.user);
+          // Fetch assigned roles for current user
+          this.fetchUserRoles(res.user.id).subscribe();
         }
       })
     );
@@ -47,7 +46,7 @@ export class AuthService {
   }
 
   registerVendor(payload: RegisterVendorRequest): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${this.baseUrl}/register-vendor`, payload);
+    return this.http.post<ApiResponse>(`${this.vendorUrl}/register`, payload);
   }
 
   refreshToken(): Observable<AuthResponse> {
