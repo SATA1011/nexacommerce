@@ -11,22 +11,11 @@
       </div>
       <h1 class="page-title">Open Your Store on NexaCommerce</h1>
       <p class="page-subtitle">
-        Join thousands of sellers. Fill in your store details below — our team will review and approve your application within 24 hours.
+        Join verified merchants selling products across the globe. Fill in your details below to submit your store for review.
       </p>
     </div>
 
-    <!-- Auth guard notice -->
-    @if (!isAuthenticated()) {
-      <div class="auth-notice">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <span>You must <a routerLink="/auth/login" [queryParams]="{returnUrl: '/vendor/become-seller'}">sign in</a> or <a routerLink="/auth/register">create an account</a> first before opening a store.</span>
-      </div>
-    }
-
-    <!-- Success -->
+    <!-- Feedback Alerts -->
     @if (successMessage()) {
       <div class="alert-success">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +25,6 @@
       </div>
     }
 
-    <!-- Error -->
     @if (errorMessage()) {
       <div class="alert-error">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +38,61 @@
     @if (!successMessage()) {
       <form (ngSubmit)="onSubmit()" class="seller-form">
 
-        <!-- Store Name -->
+        <!-- LOGGED IN USER INFO BANNER -->
+        @if (isAuthenticated()) {
+          <div class="auth-notice">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>
+              Signed in as <strong>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</strong> ({{ authService.currentUser()?.email }}). Your account will be upgraded to a Seller once approved.
+            </span>
+          </div>
+        } @else {
+          <!-- GUEST ACCOUNT DETAILS -->
+          <div class="section-divider">
+            <span class="section-title">1. Your Seller Account</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">First Name <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="firstName" name="firstName" required
+                     placeholder="Sarah" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="lastName" name="lastName" required
+                     placeholder="Connor" class="form-input" />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Business Email <span class="required">*</span></label>
+              <input type="email" [(ngModel)]="email" name="email" required
+                     placeholder="seller@example.com" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password <span class="required">*</span></label>
+              <input type="password" [(ngModel)]="password" name="password" required
+                     placeholder="••••••••" class="form-input" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Contact Phone <span class="optional">(Optional)</span></label>
+            <input type="tel" [(ngModel)]="phoneNumber" name="phoneNumber"
+                   placeholder="+1 555-0199" class="form-input" />
+          </div>
+
+          <div class="section-divider">
+            <span class="section-title">2. Store & Business Profile</span>
+          </div>
+        }
+
+        <!-- STORE DETAILS (SHARED FOR BOTH GUEST & LOGGED IN) -->
         <div class="form-group">
           <label class="form-label">Store Name <span class="required">*</span></label>
           <input type="text"
@@ -78,25 +120,34 @@
           <p class="form-hint">Auto-generated from store name. Only lowercase letters, numbers, and hyphens.</p>
         </div>
 
+        <!-- Tax Number & Business Address -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">GST / VAT / Tax ID <span class="optional">(Optional)</span></label>
+            <input type="text"
+                   [(ngModel)]="taxNumber"
+                   name="taxNumber"
+                   placeholder="e.g. TAX-99882"
+                   class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business Address <span class="optional">(Optional)</span></label>
+            <input type="text"
+                   [(ngModel)]="businessAddress"
+                   name="businessAddress"
+                   placeholder="e.g. Suite 100, Tech Park"
+                   class="form-input" />
+          </div>
+        </div>
+
         <!-- Description -->
         <div class="form-group">
-          <label class="form-label">Store Description</label>
+          <label class="form-label">Store Description <span class="optional">(Optional)</span></label>
           <textarea [(ngModel)]="description"
                     name="description"
                     rows="3"
-                    placeholder="Tell buyers what makes your store unique..."
+                    placeholder="Tell buyers what makes your store and products unique..."
                     class="form-input form-textarea"></textarea>
-        </div>
-
-        <!-- Tax Number -->
-        <div class="form-group">
-          <label class="form-label">GST / VAT / Tax Number <span class="optional">(Optional)</span></label>
-          <input type="text"
-                 [(ngModel)]="taxNumber"
-                 name="taxNumber"
-                 placeholder="e.g. GST-1234567890"
-                 class="form-input" />
-          <p class="form-hint">Required for tax invoicing in some regions.</p>
         </div>
 
         <!-- Info box -->
@@ -107,16 +158,15 @@
           <div>
             <p class="info-title">What happens after submission?</p>
             <ul class="info-list">
-              <li>Your store is created with <strong>Pending</strong> status.</li>
-              <li>An admin reviews your application (usually within 24h).</li>
-              <li>Once <strong>Approved</strong>, you can start listing products.</li>
-              <li>Platform commission rate is <strong>10%</strong> by default.</li>
+              <li>Your store application is created in <strong>Pending Review</strong> status.</li>
+              <li>An admin reviews your application within 24 to 72 hours.</li>
+              <li>Once <strong>Approved</strong>, you can sign in to the <strong>Seller Studio</strong> and list products.</li>
             </ul>
           </div>
         </div>
 
         <button type="submit"
-                [disabled]="loading() || !storeName || !slug || !isAuthenticated()"
+                [disabled]="loading() || !storeName || !slug || (!isAuthenticated() && (!email || !password || !firstName || !lastName))"
                 class="submit-btn">
           @if (loading()) {
             <svg class="spinner" fill="none" viewBox="0 0 24 24">
@@ -128,9 +178,18 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-            <span>Submit Store Application</span>
+            <span>{{ isAuthenticated() ? 'Submit Store Application' : 'Create Seller Account & Store' }}</span>
           }
         </button>
+
+        @if (!isAuthenticated()) {
+          <div style="text-align: center; font-size: 0.875rem; color: #64748b; margin-top: 6px;">
+            Already have a shopper account?
+            <a routerLink="/auth/login" [queryParams]="{returnUrl: '/vendor/become-seller'}" style="color: #4f46e5; font-weight: 600; text-decoration: underline;">
+              Sign in first
+            </a>
+          </div>
+        }
 
       </form>
     }

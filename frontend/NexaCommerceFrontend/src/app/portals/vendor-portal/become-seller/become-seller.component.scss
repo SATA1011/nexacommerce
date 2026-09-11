@@ -286,3 +286,33 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-divider {
+  margin: 12px 0 6px;
+  border-top: 1px dashed $border-color;
+  position: relative;
+  text-align: center;
+
+  .section-title {
+    position: relative;
+    top: -9px;
+    background: $bg-card;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $color-brand;
+  }
+}
+

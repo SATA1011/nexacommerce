@@ -13,15 +13,23 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './become-seller.component.scss'
 })
 export class BecomeSellerComponent {
-  private readonly vendorService = inject(VendorService);
-  private readonly authService = inject(AuthService);
+  readonly vendorService = inject(VendorService);
+  readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  // Form fields
+  // Guest Account fields (when not logged in)
+  firstName = '';
+  lastName = '';
+  email = '';
+  password = '';
+  phoneNumber = '';
+
+  // Store fields
   storeName = '';
   slug = '';
   description = '';
   taxNumber = '';
+  businessAddress = '';
 
   // UI state
   loading = signal(false);
@@ -42,33 +50,59 @@ export class BecomeSellerComponent {
   onSubmit(): void {
     if (!this.storeName || !this.slug) return;
 
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/vendor/become-seller' } });
-      return;
-    }
-
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const payload: RegisterStoreRequest = {
-      storeName: this.storeName.trim(),
-      slug: this.slug.trim(),
-      description: this.description.trim() || undefined,
-      taxNumber: this.taxNumber.trim() || undefined,
-    };
+    if (this.isAuthenticated()) {
+      // Logged-in user: register store directly
+      const payload: RegisterStoreRequest = {
+        storeName: this.storeName.trim(),
+        slug: this.slug.trim(),
+        description: this.description.trim() || undefined,
+        taxNumber: this.taxNumber.trim() || undefined,
+      };
 
-    this.vendorService.registerStore(payload).subscribe({
-      next: (store) => {
+      this.vendorService.registerStore(payload).subscribe({
+        next: (store) => {
+          this.loading.set(false);
+          this.successMessage.set(`Store "${store.storeName}" registered! Status: ${store.status}. Admin will review shortly.`);
+          setTimeout(() => this.router.navigate(['/vendor/dashboard']), 2200);
+        },
+        error: (err) => {
+          this.loading.set(false);
+          const msg = err.error?.message || err.error?.detail || 'Failed to register store. Please try again.';
+          this.errorMessage.set(msg);
+        }
+      });
+    } else {
+      // Guest user: register account and store together
+      if (!this.firstName || !this.lastName || !this.email || !this.password) {
         this.loading.set(false);
-        this.successMessage.set(`Store "${store.storeName}" registered! Status: ${store.status}. Admin will review and approve shortly.`);
-        // Navigate to vendor dashboard after 2 seconds
-        setTimeout(() => this.router.navigate(['/vendor/dashboard']), 2500);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        const msg = err.error?.message || err.error?.detail || 'Failed to register store. Please try again.';
-        this.errorMessage.set(msg);
+        this.errorMessage.set('Please fill in your name, email, and password.');
+        return;
       }
-    });
+
+      this.authService.registerVendor({
+        firstName: this.firstName.trim(),
+        lastName: this.lastName.trim(),
+        email: this.email.trim(),
+        password: this.password,
+        phoneNumber: this.phoneNumber?.trim() || undefined,
+        storeName: this.storeName.trim(),
+        taxNumber: this.taxNumber?.trim() || undefined,
+        businessAddress: this.businessAddress?.trim() || undefined
+      }).subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.successMessage.set(`Seller account and store "${this.storeName}" submitted! Admin will review shortly.`);
+          setTimeout(() => this.router.navigate(['/auth/login']), 2500);
+        },
+        error: (err) => {
+          this.loading.set(false);
+          const msg = err.error?.message || err.error?.detail || 'Failed to register seller account. Please try again.';
+          this.errorMessage.set(msg);
+        }
+      });
+    }
   }
 }
