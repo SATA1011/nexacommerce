@@ -13,6 +13,72 @@
     padding-right: 24px;
   }
 
+  // Status Alert Banners
+  .status-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: $radius-lg;
+    background: $bg-card;
+    border: 1px solid $border-color;
+    box-shadow: $shadow-card;
+
+    .banner-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .banner-content {
+      flex: 1;
+
+      h4 {
+        margin: 0 0 4px 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: $text-primary;
+      }
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: $text-secondary;
+        line-height: 1.5;
+
+        strong {
+          color: $text-primary;
+        }
+
+        .banner-link {
+          color: $color-brand;
+          font-weight: 600;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &.banner-pending {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.3);
+
+      h4 { color: #d97706; }
+    }
+
+    &.banner-warning {
+      background: rgba(79, 70, 229, 0.08);
+      border-color: rgba(79, 70, 229, 0.3);
+
+      h4 { color: $color-brand; }
+    }
+
+    &.banner-danger {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.3);
+
+      h4 { color: #dc2626; }
+    }
+  }
+
   // Merchant Portal Banner
   .merchant-banner {
     background: linear-gradient(135deg, #312e81 0%, #3730a3 50%, #0f172a 100%);
@@ -48,6 +114,18 @@
         color: #c7d2fe;
         font-size: 12px;
         font-weight: 600;
+
+        &.badge-verified {
+          background-color: rgba(16, 185, 129, 0.25);
+          border-color: rgba(16, 185, 129, 0.5);
+          color: #a7f3d0;
+        }
+
+        &.badge-pending {
+          background-color: rgba(245, 158, 11, 0.25);
+          border-color: rgba(245, 158, 11, 0.5);
+          color: #fde68a;
+        }
       }
 
       .commission-rate {

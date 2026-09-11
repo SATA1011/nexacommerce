@@ -1,26 +1,74 @@
 <div class="vendor-container">
   
+  <!-- STATUS ALERT BANNERS -->
+  @if (storeNotFound()) {
+    <div class="status-banner banner-warning">
+      <div class="banner-icon">ℹ️</div>
+      <div class="banner-content">
+        <h4>No Store Profile Found</h4>
+        <p>You have not registered a store yet. <a routerLink="/vendor/become-seller" class="banner-link">Click here to register your store</a> and start selling on NexaCommerce.</p>
+      </div>
+    </div>
+  } @else if (store()?.status === 'Pending') {
+    <div class="status-banner banner-pending">
+      <div class="banner-icon">⏳</div>
+      <div class="banner-content">
+        <h4>Application Under Review</h4>
+        <p>Your store application for <strong>{{ store()?.storeName }}</strong> is currently in <strong>Pending</strong> review by administrators. Once approved, your products and storefront will be visible to buyers worldwide.</p>
+      </div>
+      <span class="status-pill pill-pending">Pending Review</span>
+    </div>
+  } @else if (store()?.status === 'Suspended') {
+    <div class="status-banner banner-danger">
+      <div class="banner-icon">⚠️</div>
+      <div class="banner-content">
+        <h4>Store Suspended</h4>
+        <p>Your store <strong>{{ store()?.storeName }}</strong> has been temporarily suspended by an administrator. Please reach out to support for more details.</p>
+      </div>
+      <span class="status-pill pill-danger">Suspended</span>
+    </div>
+  } @else if (store()?.status === 'Rejected') {
+    <div class="status-banner banner-danger">
+      <div class="banner-icon">❌</div>
+      <div class="banner-content">
+        <h4>Application Rejected</h4>
+        <p>Your store registration application was declined. Please contact support if you believe this was in error.</p>
+      </div>
+      <span class="status-pill pill-danger">Rejected</span>
+    </div>
+  }
+
   <!-- Merchant Portal Banner -->
   <div class="merchant-banner">
     <div>
       <div class="merchant-meta">
-        <span class="merchant-badge">
-          Verified Merchant
-        </span>
-        <span class="commission-rate">Commission Rate: 8.5%</span>
+        @if (store()?.isVerified) {
+          <span class="merchant-badge badge-verified">
+            ✓ Verified Merchant
+          </span>
+        } @else {
+          <span class="merchant-badge" [class.badge-pending]="store()?.status === 'Pending'">
+            Status: {{ store()?.status || 'Active' }}
+          </span>
+        }
+        <span class="commission-rate">Platform Commission: {{ store()?.commissionRate ?? 10 }}%</span>
       </div>
       <h1 class="banner-title">Merchant Seller Studio</h1>
       <p class="banner-subtitle">
-        Storefront: <span class="store-name">Apex Electronics Co.</span> • Managed by {{ authService.currentUser()?.firstName || 'Merchant' }}
+        Storefront: <span class="store-name">{{ store()?.storeName || 'My Store' }}</span>
+        @if (store()?.slug) {
+          <span class="store-slug"> (nexacommerce.com/store/{{ store()?.slug }})</span>
+        }
+        • Managed by {{ authService.currentUser()?.firstName || 'Merchant' }} {{ authService.currentUser()?.lastName || '' }}
       </p>
     </div>
 
     <div class="banner-actions">
-      <button class="new-listing-btn">
+      <button class="new-listing-btn" [disabled]="store()?.status === 'Pending' || store()?.status === 'Suspended'">
         + New Listing
       </button>
       <a routerLink="/catalog" class="live-store-link">
-        View Live Store
+        View Marketplace
       </a>
     </div>
   </div>
@@ -72,9 +120,9 @@
         <p class="table-subtitle">Manage pricing, variants, and platform admin approval states</p>
       </div>
       <div class="filter-tabs">
-        <button class="tab-btn active">All (18)</button>
-        <button class="tab-btn">Active (14)</button>
-        <button class="tab-btn">Under Review (2)</button>
+        <button class="tab-btn active">All (4)</button>
+        <button class="tab-btn">Active (2)</button>
+        <button class="tab-btn">Under Review (1)</button>
       </div>
     </div>
 
@@ -98,7 +146,7 @@
                 <span class="product-sku">SKU: {{ item.sku }}</span>
               </td>
               <td class="cell-data category-cell">{{ item.category }}</td>
-              <td class="cell-data price-cell">\${{ item.price.toFixed(2) }}</td>
+              <td class="cell-data price-cell">${{ item.price.toFixed(2) }}</td>
               <td class="cell-data stock-cell">
                 <span [class.low-stock]="item.stock < 10">
                   {{ item.stock }} units
