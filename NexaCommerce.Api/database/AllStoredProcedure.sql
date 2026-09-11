@@ -799,8 +799,8 @@ BEGIN
     SELECT COUNT(1)
     FROM `vendors` c
     WHERE c.`is_deleted` = 0
-      AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
-      AND (`p_status` IS NULL OR c.`status` = `p_status`);
+      AND (`p_search_term` IS NULL OR `p_search_term` = '' OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
+      AND (`p_status` IS NULL OR `p_status` = '' OR c.`status` = `p_status`);
 
     -- Paginated Results
     SELECT 
@@ -818,8 +818,8 @@ BEGIN
         c.`is_deleted`
     FROM `vendors` c
     WHERE c.`is_deleted` = 0
-      AND (`p_search_term` IS NULL OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
-      AND (`p_status` IS NULL OR c.`status` = `p_status`)
+      AND (`p_search_term` IS NULL OR `p_search_term` = '' OR c.`store_name` LIKE CONCAT('%', `p_search_term`, '%') OR c.`slug` LIKE CONCAT('%', `p_search_term`, '%'))
+      AND (`p_status` IS NULL OR `p_status` = '' OR c.`status` = `p_status`)
     ORDER BY c.`created_at_utc` DESC
     LIMIT `v_offset`, `p_page_size`;
 END //

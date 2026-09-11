@@ -23,6 +23,7 @@ export class BecomeSellerComponent {
   email = '';
   password = '';
   phoneNumber = '';
+  showPassword = signal(false);
 
   // Store fields
   storeName = '';

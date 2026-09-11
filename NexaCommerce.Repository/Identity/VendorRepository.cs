@@ -48,8 +48,8 @@ public sealed class VendorRepository : IVendorRepository
             StoredProcedure.VendorsGetAll,
             new
             {
-                p_search_term = searchTerm,
-                p_status = status,
+                p_search_term = string.IsNullOrWhiteSpace(searchTerm) ? null : searchTerm.Trim(),
+                p_status = string.IsNullOrWhiteSpace(status) ? null : status.Trim(),
                 p_page_number = pageNumber,
                 p_page_size = pageSize
             },

@@ -165,6 +165,39 @@
             color: $text-light;
           }
         }
+
+        .password-input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          .form-input {
+            padding-right: 44px;
+          }
+
+          .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            color: $text-muted;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color $transition-fast;
+
+            &:hover {
+              color: $text-primary;
+            }
+
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
       }
 
       // Merchant Store Details Section

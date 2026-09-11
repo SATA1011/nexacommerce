@@ -268,9 +268,12 @@ public sealed class VendorController : ControllerBase
     {
         try
         {
+            var searchTerm = string.IsNullOrWhiteSpace(request.SearchTerm) ? null : request.SearchTerm.Trim();
+            var status = string.IsNullOrWhiteSpace(request.Status) ? null : request.Status.Trim();
+
             var (stores, totalCount) = await _vendorRepository.GetAllAsync(
-                request.SearchTerm,
-                request.Status,
+                searchTerm,
+                status,
                 request.PageNumber,
                 request.PageSize,
                 cancellationToken

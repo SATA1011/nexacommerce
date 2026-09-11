@@ -20,6 +20,7 @@ export class RegisterComponent {
   email = '';
   password = '';
   phoneNumber = '';
+  showPassword = signal(false);
 
   loading = signal(false);
   errorMessage = signal<string | null>(null);

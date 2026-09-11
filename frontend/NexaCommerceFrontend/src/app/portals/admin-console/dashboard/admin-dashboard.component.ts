@@ -185,7 +185,9 @@ export class AdminDashboardComponent implements OnInit {
 
   loadVendors(): void {
     this.loadingVendors.set(true);
-    this.vendorService.getStores(this.vendorSearchTerm, this.vendorStatusFilter).subscribe({
+    const search = this.vendorSearchTerm?.trim() || undefined;
+    const status = (this.vendorStatusFilter && this.vendorStatusFilter !== '') ? this.vendorStatusFilter.trim() : undefined;
+    this.vendorService.getStores(search, status).subscribe({
       next: (res) => {
         this.loadingVendors.set(false);
         this.vendors.set(res.items || []);
