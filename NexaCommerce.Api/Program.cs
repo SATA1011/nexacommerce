@@ -8,6 +8,7 @@ using NexaCommerce.Api.Filters;
 using NexaCommerce.Data.Factories;
 using NexaCommerce.Domain.Interfaces;
 using NexaCommerce.Repository.Identity;
+using NexaCommerce.Repository.Catalog;
 using NexaCommerce.Security.Cryptography;
 using NexaCommerce.Security.Options;
 using NexaCommerce.Security.Tokens;
@@ -34,8 +35,14 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
 
 // Configure JWT Authentication with resilient token parsing
 builder.Services.AddAuthentication(options =>
@@ -86,6 +93,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin", "SuperAdmin"));
     options.AddPolicy("RequireCustomerRole", policy => policy.RequireRole("Customer", "Admin", "SuperAdmin"));
     options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User", "Customer", "Admin", "SuperAdmin"));
+});
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -56,4 +56,40 @@ public static class StoredProcedure
     public const string VendorsGetAll = "Vendor_GetAll";
     public const string VendorsInsertUpdate = "Vendor_InsertUpdate";
     public const string VendorsUpdateStatus = "Vendor_UpdateStatus";
+
+    // Categories
+    public const string CategoriesGet = "Category_Get";
+    public const string CategoriesGetBySlug = "Category_GetBySlug";
+    public const string CategoriesGetAll = "Category_GetAll";
+    public const string CategoriesInsertUpdate = "Category_InsertUpdate";
+    public const string CategoriesSoftDelete = "Category_SoftDelete";
+
+    // Brands
+    public const string BrandsGet = "Brand_Get";
+    public const string BrandsGetBySlug = "Brand_GetBySlug";
+    public const string BrandsGetAll = "Brand_GetAll";
+    public const string BrandsInsertUpdate = "Brand_InsertUpdate";
+    public const string BrandsSoftDelete = "Brand_SoftDelete";
+
+    // Products
+    public const string ProductsGet = "Product_Get";
+    public const string ProductsGetBySlug = "Product_GetBySlug";
+    public const string ProductsGetAll = "Product_GetAll";
+    public const string ProductsGetByVendorId = "Product_GetByVendorId";
+    public const string ProductsGetForModeration = "Product_GetForModeration";
+    public const string ProductsInsertUpdate = "Product_InsertUpdate";
+    public const string ProductsUpdateStatus = "Product_UpdateStatus";
+    public const string ProductsSoftDelete = "Product_SoftDelete";
+
+    // Product Images
+    public const string ProductImagesGetByProductId = "ProductImage_GetByProductId";
+    public const string ProductImagesInsertUpdate = "ProductImage_InsertUpdate";
+    public const string ProductImagesSetPrimary = "ProductImage_SetPrimary";
+    public const string ProductImagesDelete = "ProductImage_Delete";
+
+    // Product Variants
+    public const string ProductVariantsGetByProductId = "ProductVariant_GetByProductId";
+    public const string ProductVariantsInsertUpdate = "ProductVariant_InsertUpdate";
+    public const string ProductVariantsDelete = "ProductVariant_Delete";
 }
+

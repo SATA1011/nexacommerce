@@ -221,3 +221,114 @@ CREATE TABLE IF NOT EXISTS `vendors` (
     KEY `ix_vendors_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB;
 
+-- =============================================================================
+-- 3. Catalog & Product Management Module
+-- =============================================================================
+
+-- Categories Table (Hierarchical Category Tree)
+CREATE TABLE IF NOT EXISTS `categories` (
+    `id` CHAR(36) NOT NULL,
+    `parent_id` CHAR(36) NULL,
+    `name` VARCHAR(150) NOT NULL,
+    `slug` VARCHAR(150) NOT NULL,
+    `description` VARCHAR(500) NULL,
+    `image_url` VARCHAR(1000) NULL,
+    `display_order` INT NOT NULL DEFAULT 0,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ux_categories_slug` (`slug`),
+    KEY `ix_categories_parent_id` (`parent_id`),
+    KEY `ix_categories_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB;
+
+-- Brands Table
+CREATE TABLE IF NOT EXISTS `brands` (
+    `id` CHAR(36) NOT NULL,
+    `name` VARCHAR(150) NOT NULL,
+    `slug` VARCHAR(150) NOT NULL,
+    `description` VARCHAR(500) NULL,
+    `logo_url` VARCHAR(1000) NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ux_brands_slug` (`slug`),
+    KEY `ix_brands_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB;
+
+-- Products Table (Vendor-Owned Products with Denormalized Primary Image)
+CREATE TABLE IF NOT EXISTS `products` (
+    `id` CHAR(36) NOT NULL,
+    `vendor_id` CHAR(36) NOT NULL,
+    `category_id` CHAR(36) NULL,
+    `brand_id` CHAR(36) NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `slug` VARCHAR(255) NOT NULL,
+    `short_description` VARCHAR(500) NULL,
+    `description` LONGTEXT NULL,
+    `sku` VARCHAR(100) NULL,
+    `price` DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
+    `compare_at_price` DECIMAL(12, 2) NULL,
+    `cost_price` DECIMAL(12, 2) NULL,
+    `stock_quantity` INT NOT NULL DEFAULT 0,
+    `primary_image_url` VARCHAR(1000) NULL,
+    `status` VARCHAR(50) NOT NULL DEFAULT 'Draft',
+    `rejection_reason` VARCHAR(500) NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ux_products_slug` (`slug`),
+    KEY `ix_products_vendor_id` (`vendor_id`),
+    KEY `ix_products_category_id` (`category_id`),
+    KEY `ix_products_brand_id` (`brand_id`),
+    KEY `ix_products_status` (`status`),
+    KEY `ix_products_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB;
+
+-- ProductVariants Table (Optional SKU Variations)
+CREATE TABLE IF NOT EXISTS `product_variants` (
+    `id` CHAR(36) NOT NULL,
+    `product_id` CHAR(36) NOT NULL,
+    `sku` VARCHAR(100) NOT NULL,
+    `title` VARCHAR(150) NOT NULL,
+    `price` DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
+    `compare_at_price` DECIMAL(12, 2) NULL,
+    `stock_quantity` INT NOT NULL DEFAULT 0,
+    `attributes_json` LONGTEXT NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ux_product_variants_sku` (`sku`),
+    KEY `ix_product_variants_product_id` (`product_id`),
+    KEY `ix_product_variants_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB;
+
+-- ProductImages Table (Full Gallery with Primary Flag)
+CREATE TABLE IF NOT EXISTS `product_images` (
+    `id` CHAR(36) NOT NULL,
+    `product_id` CHAR(36) NOT NULL,
+    `variant_id` CHAR(36) NULL,
+    `image_url` VARCHAR(1000) NOT NULL,
+    `thumbnail_url` VARCHAR(1000) NULL,
+    `alt_text` VARCHAR(255) NULL,
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `is_primary` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at_utc` DATETIME(6) NOT NULL,
+    `updated_at_utc` DATETIME(6) NULL,
+    PRIMARY KEY (`id`),
+    KEY `ix_product_images_product_id` (`product_id`),
+    KEY `ix_product_images_variant_id` (`variant_id`),
+    KEY `ix_product_images_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB;
+
+
+

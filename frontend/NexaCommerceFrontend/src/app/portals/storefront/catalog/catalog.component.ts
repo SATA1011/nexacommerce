@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CatalogService, ProductItem as ApiProductItem, CategoryItem } from '../../../core/services/catalog.service';
 
-interface ProductItem {
+interface DisplayProductItem {
   id: string;
   title: string;
   storeName: string;
@@ -23,16 +24,20 @@ interface ProductItem {
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.scss'
 })
-export class CatalogComponent {
+export class CatalogComponent implements OnInit {
+  private readonly catalogService = inject(CatalogService);
+
   searchQuery = '';
   sortBy = 'featured';
   selectedCategory: string | null = null;
   maxPrice = 1500;
   onlyInStock = false;
+  isLoading = signal<boolean>(false);
 
-  filterCategories = ['Electronics', 'Computing', 'Audio & Sound', 'Wearables', 'Accessories'];
+  filterCategories: string[] = ['Electronics', 'Computing', 'Audio & Sound', 'Wearables', 'Accessories'];
 
-  products: ProductItem[] = [
+  // Default fallback showcase products in case database has no approved vendor listings yet
+  defaultProducts: DisplayProductItem[] = [
     {
       id: 'p1',
       title: 'Pro Wireless Noise-Cancelling Headphones',
@@ -109,12 +114,66 @@ export class CatalogComponent {
     }
   ];
 
+  products = signal<DisplayProductItem[]>(this.defaultProducts);
+
+  ngOnInit(): void {
+    this.loadCategories();
+    this.loadProducts();
+  }
+
+  loadCategories(): void {
+    this.catalogService.getCategories().subscribe({
+      next: (categories: CategoryItem[]) => {
+        if (categories && categories.length > 0) {
+          this.filterCategories = categories.map(c => c.name);
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  loadProducts(): void {
+    this.isLoading.set(true);
+    this.catalogService.getProducts({
+      searchTerm: this.searchQuery || undefined,
+      maxPrice: this.maxPrice || undefined,
+      sortBy: this.sortBy
+    }).subscribe({
+      next: (res) => {
+        this.isLoading.set(false);
+        if (res.items && res.items.length > 0) {
+          const mapped: DisplayProductItem[] = res.items.map(p => ({
+            id: p.id,
+            title: p.title,
+            storeName: p.vendorStoreName || 'Marketplace Merchant',
+            category: p.categoryName || 'General',
+            price: p.price,
+            originalPrice: p.compareAtPrice,
+            rating: 4.9,
+            reviewsCount: 12,
+            imageUrl: p.primaryImageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80',
+            badge: 'Verified Seller',
+            inStock: p.stockQuantity > 0
+          }));
+          this.products.set(mapped);
+        } else {
+          // If no approved live products yet, show sample items filtered locally
+          this.products.set(this.defaultProducts);
+        }
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.products.set(this.defaultProducts);
+      }
+    });
+  }
+
   toggleCategory(cat: string): void {
     this.selectedCategory = this.selectedCategory === cat ? null : cat;
   }
 
-  filteredProducts(): ProductItem[] {
-    return this.products.filter((p) => {
+  filteredProducts(): DisplayProductItem[] {
+    return this.products().filter((p) => {
       const matchesSearch = !this.searchQuery ||
         p.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         p.storeName.toLowerCase().includes(this.searchQuery.toLowerCase());
