@@ -2,50 +2,59 @@
   
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-grid-bg"></div>
-    
     <div class="hero-content">
       
       <div class="platform-pill">
-        <span class="pulse-dot"></span>
-        Enterprise Multi-Vendor Commerce Platform
+        Multi-Vendor Marketplace
       </div>
 
       <h1 class="hero-title">
-        Discover Verified Merchants & <span class="gradient-text">Curated Products</span>
+        Discover Quality Products from Independent Merchants
       </h1>
 
       <p class="hero-subtitle">
-        A high-throughput marketplace connecting discerning buyers with verified sellers, powered by high-speed .NET 10 Web API and reactive Angular 19.
+        Shop across hundreds of verified independent stores, or set up your own seller account and start reaching customers worldwide.
       </p>
 
       <!-- Search & Action CTA -->
       <div class="hero-actions">
         <a routerLink="/catalog" class="btn-primary">
-          Explore Marketplace
+          Browse Catalog
         </a>
-        <a routerLink="/auth/register" [queryParams]="{ type: 'vendor' }" class="btn-secondary">
-          Become a Merchant
+        <a routerLink="/vendor/become-seller" class="btn-secondary">
+          Open a Store
         </a>
       </div>
 
-      <!-- Feature Badges -->
+      <!-- Feature Highlights -->
       <div class="features-grid">
         <div class="feature-card">
-          <span class="feature-value">99.99%</span>
-          <p class="feature-label">Gateway Uptime</p>
+          <div class="feature-icon">✓</div>
+          <div>
+            <div class="feature-title">Verified Merchants</div>
+            <p class="feature-label">Vetted seller accounts</p>
+          </div>
         </div>
         <div class="feature-card">
-          <span class="feature-value brand">&lt; 15ms</span>
-          <p class="feature-label">Dapper Query Latency</p>
+          <div class="feature-icon">🛡️</div>
+          <div>
+            <div class="feature-title">Secure Orders</div>
+            <p class="feature-label">Protected transactions</p>
+          </div>
         </div>
         <div class="feature-card">
-          <span class="feature-value indigo">Multi-Role</span>
-          <p class="feature-label">Buyer, Seller, Admin</p>
+          <div class="feature-icon">📦</div>
+          <div>
+            <div class="feature-title">Fast Delivery</div>
+            <p class="feature-label">Tracked order shipping</p>
+          </div>
         </div>
         <div class="feature-card">
-          <span class="feature-value emerald">Secure</span>
-          <p class="feature-label">Rotating Refresh Tokens</p>
+          <div class="feature-icon">💬</div>
+          <div>
+            <div class="feature-title">Direct Support</div>
+            <p class="feature-label">Responsive assistance</p>
+          </div>
         </div>
       </div>
 
@@ -57,15 +66,15 @@
     <div class="section-header">
       <div>
         <h2 class="section-title">Popular Categories</h2>
-        <p class="section-subtitle">Explore top categories curated from verified marketplace merchants</p>
+        <p class="section-subtitle">Browse products organized by category</p>
       </div>
       <a routerLink="/catalog" class="view-all-link">View all &rarr;</a>
     </div>
 
     <div class="categories-grid">
       @for (cat of categories; track cat.name) {
-        <a routerLink="/catalog" [queryParams]="{ category: cat.slug }" class="category-card group">
-          <div class="category-icon" [ngClass]="cat.bgClass">
+        <a routerLink="/catalog" [queryParams]="{ category: cat.slug }" class="category-card">
+          <div class="category-icon">
             {{ cat.icon }}
           </div>
           <h3 class="category-name">{{ cat.name }}</h3>
@@ -79,19 +88,19 @@
   <section class="portals-banner-section">
     <div class="portals-banner">
       <div class="banner-content">
-        <h3 class="banner-title">Experience All Three Core Portals</h3>
+        <h3 class="banner-title">One Platform, Three Tailored Experiences</h3>
         <p class="banner-subtitle">
-          NexaCommerce is architected with three isolated yet interconnected operational experiences: Customer Storefront, Merchant Seller Portal, and Platform Admin Console.
+          NexaCommerce provides unified workspaces for buyers, merchants, and platform operators.
         </p>
         <div class="banner-actions">
-          <a routerLink="/catalog" class="portal-btn shopper">
-            Shopper Experience
+          <a routerLink="/catalog" class="portal-btn">
+            Browse Storefront
           </a>
-          <a routerLink="/vendor/dashboard" class="portal-btn seller">
-            Seller Dashboard
+          <a routerLink="/vendor/dashboard" class="portal-btn">
+            Seller Studio
           </a>
-          <a routerLink="/admin/dashboard" class="portal-btn admin">
-            Platform Admin Console
+          <a routerLink="/admin/dashboard" class="portal-btn">
+            Operations Console
           </a>
         </div>
       </div>

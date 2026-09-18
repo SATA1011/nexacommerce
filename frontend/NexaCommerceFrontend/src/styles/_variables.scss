@@ -1,37 +1,37 @@
-// Global SCSS Design Tokens & Variables
+// Global SCSS Design Tokens & Variables - Clean, Developer-Realistic System
 
-// Brand Colors
-$color-brand: #4f46e5;
-$color-brand-hover: #4338ca;
-$color-brand-light: #eef2ff;
-$color-brand-subtle: #e0e7ff;
-$color-brand-dark: #3730a3;
+// Brand Colors (Professional Clean Blue)
+$color-brand: #2563eb;
+$color-brand-hover: #1d4ed8;
+$color-brand-light: #eff6ff;
+$color-brand-subtle: #dbeafe;
+$color-brand-dark: #1e40af;
 
-// Secondary Colors
-$color-indigo: #6366f1;
-$color-indigo-hover: #4f46e5;
-$color-indigo-light: #eef2ff;
-$color-purple: #9333ea;
-$color-purple-hover: #7e22ce;
-$color-purple-light: #f3e8ff;
+// Neutral Accents
+$color-indigo: #3b82f6;
+$color-indigo-hover: #2563eb;
+$color-indigo-light: #eff6ff;
+$color-purple: #475569;
+$color-purple-hover: #334155;
+$color-purple-light: #f1f5f9;
 
-// Status & Feedback Colors
-$color-success: #10b981;
-$color-success-hover: #059669;
-$color-success-bg: #ecfdf5;
-$color-success-border: #a7f3d0;
-$color-success-text: #065f46;
+// Status & Feedback Colors (Standard Soft Tones)
+$color-success: #16a34a;
+$color-success-hover: #15803d;
+$color-success-bg: #f0fdf4;
+$color-success-border: #bbf7d0;
+$color-success-text: #166534;
 
-$color-warning: #f59e0b;
+$color-warning: #d97706;
 $color-warning-bg: #fffbeb;
-$color-warning-border: #fde68a;
+$color-warning-border: #fef3c7;
 $color-warning-text: #92400e;
 
-$color-danger: #ef4444;
-$color-danger-hover: #dc2626;
+$color-danger: #dc2626;
+$color-danger-hover: #b91c1c;
 $color-danger-bg: #fef2f2;
 $color-danger-border: #fecaca;
-$color-danger-text: #b91c1c;
+$color-danger-text: #991b1b;
 
 // Backgrounds
 $bg-body: #f8fafc;
@@ -44,30 +44,30 @@ $bg-darker: #020617;
 // Borders
 $border-color: #e2e8f0;
 $border-color-light: #f1f5f9;
-$border-color-dark: #1e293b;
+$border-color-dark: #cbd5e1;
 
 // Typography & Texts
 $text-primary: #0f172a;
-$text-secondary: #475569;
+$text-secondary: #334155;
 $text-muted: #64748b;
 $text-light: #94a3b8;
 $text-white: #ffffff;
 
-// Radii
+// Radii (Realistic, Balanced)
 $radius-xs: 4px;
-$radius-sm: 8px;
-$radius-md: 12px;
-$radius-lg: 16px;
-$radius-xl: 24px;
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
 $radius-full: 9999px;
 
-// Box Shadows
-$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-$shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-$shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-$shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
-$shadow-button: 0 4px 14px rgba(79, 70, 229, 0.3);
+// Box Shadows (Subtle, Non-Distracting)
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+$shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+$shadow-glow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+$shadow-button: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
 // Transitions
-$transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-$transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: 0.15s ease-in-out;
+$transition-normal: 0.2s ease-in-out;

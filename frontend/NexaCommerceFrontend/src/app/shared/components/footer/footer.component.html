@@ -4,42 +4,42 @@
       
       <div class="footer-brand-column">
         <div class="brand-logo">
-          <div class="logo-badge">N</div>
+          <div class="logo-badge">
+            <svg class="badge-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
           <span class="brand-name">NexaCommerce</span>
         </div>
         <p class="brand-description">
-          Enterprise multi-vendor e-commerce platform built on high-throughput .NET 10 Web API and modern Angular 19.
+          A multi-vendor marketplace platform connecting independent merchants with customers.
         </p>
-        <div class="status-indicator">
-          <span class="status-dot"></span>
-          API Gateway Operational
-        </div>
       </div>
 
       <div class="footer-nav-column">
-        <h4 class="nav-title">Shop & Discover</h4>
+        <h4 class="nav-title">Marketplace</h4>
         <ul class="nav-list">
-          <li><a routerLink="/catalog" class="nav-link">All Categories</a></li>
-          <li><a routerLink="/catalog" class="nav-link">Trending Products</a></li>
+          <li><a routerLink="/catalog" class="nav-link">All Products</a></li>
+          <li><a routerLink="/catalog" class="nav-link">Categories</a></li>
           <li><a routerLink="/catalog" class="nav-link">Featured Stores</a></li>
         </ul>
       </div>
 
       <div class="footer-nav-column">
-        <h4 class="nav-title">Merchants & Sellers</h4>
+        <h4 class="nav-title">Sellers</h4>
         <ul class="nav-list">
-          <li><a routerLink="/auth/register" [queryParams]="{ type: 'vendor' }" class="nav-link">Sell on NexaCommerce</a></li>
+          <li><a routerLink="/vendor/become-seller" class="nav-link">Sell on NexaCommerce</a></li>
           <li><a routerLink="/vendor/dashboard" class="nav-link">Seller Dashboard</a></li>
-          <li><a href="javascript:void(0)" class="nav-link">Commission & Payouts</a></li>
+          <li><a routerLink="/auth/login" class="nav-link">Merchant Sign In</a></li>
         </ul>
       </div>
 
       <div class="footer-nav-column">
-        <h4 class="nav-title">Platform Security</h4>
-        <ul class="nav-list security-list">
-          <li><span>JWT & Rotating Refresh Tokens</span></li>
-          <li><span>Role-Based Access Control</span></li>
-          <li><span>Distributed Tracing & Rate Limiting</span></li>
+        <h4 class="nav-title">Platform</h4>
+        <ul class="nav-list">
+          <li><a routerLink="/admin/dashboard" class="nav-link">Admin Console</a></li>
+          <li><a href="javascript:void(0)" class="nav-link">Terms of Service</a></li>
+          <li><a href="javascript:void(0)" class="nav-link">Privacy Policy</a></li>
         </ul>
       </div>
 
@@ -47,9 +47,6 @@
 
     <div class="footer-bottom">
       <p>© 2026 NexaCommerce. All rights reserved.</p>
-      <div class="platform-badge">
-        <span>Powered by .NET 10 + Angular 19</span>
-      </div>
     </div>
   </div>
 </footer>

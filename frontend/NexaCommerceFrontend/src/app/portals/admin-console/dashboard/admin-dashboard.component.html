@@ -1,24 +1,23 @@
 <div class="admin-container">
   
-  <!-- Admin Banner -->
-  <div class="admin-banner">
-    <div>
-      <div class="admin-meta">
-        <span class="authority-badge">
-          Platform Master Authority
-        </span>
-        <span class="env-tag">SuperAdmin Console • Production API</span>
+  <!-- Admin Page Header -->
+  <div class="admin-header-card">
+    <div class="header-main">
+      <div class="header-breadcrumbs">
+        <span class="breadcrumb-item">Platform Administration</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Operations Console</span>
       </div>
-      <h1 class="banner-title">Operations & Identity Management</h1>
-      <p class="banner-subtitle">
-        Logged in as <strong>{{ authService.currentUser()?.email || 'texastiger1010@gmail.com' }}</strong>
+      <h1 class="header-title">Operations & User Management</h1>
+      <p class="header-subtitle">
+        Logged in as <strong>{{ authService.currentUser()?.email || 'admin@nexacommerce.com' }}</strong>
       </p>
     </div>
 
-    <div class="banner-actions">
-      <div class="system-health-badge">
-        <span class="health-dot"></span>
-        <span>MySQL Live Connected</span>
+    <div class="header-actions">
+      <div class="system-status-pill">
+        <span class="status-indicator-dot"></span>
+        <span>Database Connected</span>
       </div>
     </div>
   </div>
@@ -29,23 +28,23 @@
       class="nav-tab-btn" 
       [class.active]="activeTab() === 'users'"
       (click)="activeTab.set('users')">
-      <span class="tab-icon">👥</span>
-      <span>User & Role Management</span>
+      <i class="pi pi-users"></i>
+      <span>Users & Roles</span>
       <span class="tab-counter">{{ totalUsers() }}</span>
     </button>
     <button 
       class="nav-tab-btn" 
       [class.active]="activeTab() === 'vendors'"
       (click)="activeTab.set('vendors')">
-      <span class="tab-icon">🏪</span>
-      <span>Vendors & Stores</span>
+      <i class="pi pi-shop"></i>
+      <span>Vendor Stores</span>
       <span class="tab-counter">{{ totalVendors() }}</span>
     </button>
     <button 
       class="nav-tab-btn" 
       [class.active]="activeTab() === 'overview'"
       (click)="activeTab.set('overview')">
-      <span class="tab-icon">📊</span>
+      <i class="pi pi-chart-bar"></i>
       <span>Platform Overview</span>
     </button>
   </div>
@@ -57,21 +56,26 @@
       <!-- Controls Toolbar -->
       <div class="toolbar-card">
         <div class="search-box">
-          <span class="search-icon">🔍</span>
+          <i class="pi pi-search search-icon"></i>
           <input 
+            pInputText
             type="text" 
             [(ngModel)]="searchTerm" 
             (keyup.enter)="onSearch()"
             placeholder="Search users by name or email..." 
             class="search-input" />
-          <button class="search-btn" (click)="onSearch()">Search</button>
+          <p-button label="Search" size="small" (onClick)="onSearch()"></p-button>
         </div>
 
         <div class="toolbar-actions">
-          <button class="refresh-btn" (click)="loadUsers()" [disabled]="loadingUsers()">
-            <span class="refresh-icon" [class.spinning]="loadingUsers()">↻</span>
-            <span>Refresh</span>
-          </button>
+          <p-button 
+            label="Refresh" 
+            icon="pi pi-refresh" 
+            size="small" 
+            [outlined]="true"
+            [loading]="loadingUsers()" 
+            (onClick)="loadUsers()">
+          </p-button>
         </div>
       </div>
 
@@ -82,87 +86,82 @@
             <h2 class="table-title">Registered Platform Users</h2>
             <p class="table-subtitle">Manage roles, permissions, and security status for all users</p>
           </div>
-          <span class="count-pill">{{ totalUsers() }} Total Users</span>
+          <span class="count-pill">{{ totalUsers() }} users</span>
         </div>
 
-        @if (loadingUsers()) {
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <p>Loading users from Clever Cloud database...</p>
-          </div>
-        } @else if (users().length === 0) {
-          <div class="empty-state">
-            <span class="empty-icon">👤</span>
-            <h3>No users found</h3>
-            <p>No user records matched your search query.</p>
-          </div>
-        } @else {
-          <div class="table-wrapper">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>User Details</th>
-                  <th>Phone</th>
-                  <th>Status</th>
-                  <th>Assigned Roles</th>
-                  <th class="text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (user of users(); track user.id) {
-                  <tr class="table-row">
-                    <td>
-                      <div class="user-cell">
-                        <div class="avatar-circle">
-                          {{ getInitials(user.firstName, user.lastName) }}
-                        </div>
-                        <div>
-                          <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
-                          <div class="user-email">{{ user.email }}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="phone-text">{{ user.phoneNumber || '—' }}</span>
-                    </td>
-                    <td>
-                      @if (user.isActive) {
-                        <span class="status-badge active-status">Active</span>
-                      } @else {
-                        <span class="status-badge inactive-status">Inactive</span>
-                      }
-                    </td>
-                    <td>
-                      <div class="roles-tags-container">
-                        @if (user.roles && user.roles.length > 0) {
-                          @for (role of user.roles; track role) {
-                            <span 
-                              class="role-pill"
-                              [class.role-superadmin]="role.toLowerCase() === 'superadmin'"
-                              [class.role-admin]="role.toLowerCase() === 'admin'"
-                              [class.role-vendor]="role.toLowerCase() === 'vendor'"
-                              [class.role-customer]="role.toLowerCase() === 'customer'"
-                              [class.role-user]="role.toLowerCase() === 'user'">
-                              {{ role }}
-                            </span>
-                          }
-                        } @else {
-                          <span class="no-roles-text">No roles assigned</span>
-                        }
-                      </div>
-                    </td>
-                    <td class="text-right">
-                      <button class="manage-btn" (click)="openRoleModal(user)">
-                        <span>⚙️</span>
-                        <span>Manage Roles</span>
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
+        <p-table 
+          [value]="users()" 
+          [loading]="loadingUsers()" 
+          [paginator]="true" 
+          [rows]="10" 
+          [rowsPerPageOptions]="[10, 20, 50]"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-sm">
+          <ng-template #header>
+            <tr>
+              <th>User</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Assigned Roles</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-user>
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar-circle">
+                    {{ getInitials(user.firstName, user.lastName) }}
+                  </div>
+                  <div>
+                    <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+                    <div class="user-email">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="phone-text">{{ user.phoneNumber || '—' }}</span>
+              </td>
+              <td>
+                <p-tag 
+                  [severity]="user.isActive ? 'success' : 'danger'" 
+                  [value]="user.isActive ? 'Active' : 'Inactive'">
+                </p-tag>
+              </td>
+              <td>
+                <div class="roles-tags-container">
+                  @if (user.roles && user.roles.length > 0) {
+                    @for (role of user.roles; track role) {
+                      <p-tag 
+                        [severity]="role.toLowerCase() === 'superadmin' ? 'contrast' : (role.toLowerCase() === 'admin' ? 'info' : (role.toLowerCase() === 'vendor' ? 'warn' : 'secondary'))"
+                        [value]="role">
+                      </p-tag>
+                    }
+                  } @else {
+                    <span class="no-roles-text">No roles assigned</span>
+                  }
+                </div>
+              </td>
+              <td class="text-right">
+                <p-button 
+                  label="Manage Roles" 
+                  icon="pi pi-cog" 
+                  size="small" 
+                  [outlined]="true"
+                  (onClick)="openRoleModal(user)">
+                </p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5" class="text-center py-8 text-slate-500">
+                <i class="pi pi-user text-3xl mb-2 block"></i>
+                No user records found.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   }
@@ -180,28 +179,35 @@
       <!-- Controls Toolbar -->
       <div class="toolbar-card">
         <div class="search-box">
-          <span class="search-icon">🔍</span>
+          <i class="pi pi-search search-icon"></i>
           <input 
+            pInputText
             type="text" 
             [(ngModel)]="vendorSearchTerm" 
             (keyup.enter)="onVendorSearch()"
             placeholder="Search stores by name, slug, or tax number..." 
             class="search-input" />
-          <button class="search-btn" (click)="onVendorSearch()">Search</button>
+          <p-button label="Search" size="small" (onClick)="onVendorSearch()"></p-button>
         </div>
 
         <div class="toolbar-actions">
-          <select class="filter-select" [(ngModel)]="vendorStatusFilter" (change)="loadVendors()">
-            <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Suspended">Suspended</option>
-          </select>
-          <button class="refresh-btn" (click)="loadVendors()" [disabled]="loadingVendors()">
-            <span class="refresh-icon" [class.spinning]="loadingVendors()">↻</span>
-            <span>Refresh</span>
-          </button>
+          <p-select 
+            [options]="statusOptions" 
+            [(ngModel)]="vendorStatusFilter" 
+            optionLabel="label" 
+            optionValue="value"
+            (onChange)="loadVendors()"
+            placeholder="Select Status"
+            styleClass="w-40 text-xs">
+          </p-select>
+          <p-button 
+            label="Refresh" 
+            icon="pi pi-refresh" 
+            size="small" 
+            [outlined]="true"
+            [loading]="loadingVendors()" 
+            (onClick)="loadVendors()">
+          </p-button>
         </div>
       </div>
 
@@ -210,101 +216,109 @@
         <div class="table-header-title">
           <div>
             <h2 class="table-title">Registered Vendor Stores</h2>
-            <p class="table-subtitle">Live records from the <code>vendors</code> table in database</p>
+            <p class="table-subtitle">Review and manage vendor stores and their operational statuses</p>
           </div>
-          <span class="count-pill">{{ totalVendors() }} Stores</span>
+          <span class="count-pill">{{ totalVendors() }} stores</span>
         </div>
 
-        @if (loadingVendors()) {
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <p>Loading vendor stores from database...</p>
-          </div>
-        } @else if (vendors().length === 0) {
-          <div class="empty-state">
-            <span class="empty-icon">🏪</span>
-            <h3>No vendor stores found</h3>
-            <p>No stores registered yet or none matched your filter.</p>
-          </div>
-        } @else {
-          <div class="table-wrapper">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Store Details</th>
-                  <th>Tax / Business ID</th>
-                  <th>Commission</th>
-                  <th>Status</th>
-                  <th>Verified</th>
-                  <th>Registered</th>
-                  <th class="text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (store of vendors(); track store.id) {
-                  <tr class="table-row">
-                    <td>
-                      <div class="store-cell">
-                        <div class="avatar-circle store-avatar">
-                          🏪
-                        </div>
-                        <div>
-                          <div class="user-name">{{ store.storeName }}</div>
-                          <div class="user-email">/store/{{ store.slug }}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="phone-text">{{ store.taxNumber || '—' }}</span>
-                    </td>
-                    <td>
-                      <span class="commission-pill">{{ store.commissionRate }}%</span>
-                    </td>
-                    <td>
-                      <span 
-                        class="status-badge"
-                        [class.status-pending]="store.status.toLowerCase() === 'pending'"
-                        [class.status-approved]="store.status.toLowerCase() === 'approved'"
-                        [class.status-rejected]="store.status.toLowerCase() === 'rejected'"
-                        [class.status-suspended]="store.status.toLowerCase() === 'suspended'">
-                        {{ store.status }}
-                      </span>
-                    </td>
-                    <td>
-                      @if (store.isVerified) {
-                        <span class="verified-pill">✓ Verified</span>
-                      } @else {
-                        <span class="unverified-pill">Unverified</span>
-                      }
-                    </td>
-                    <td>
-                      <span class="date-text">{{ store.createdAtUtc | date:'mediumDate' }}</span>
-                    </td>
-                    <td class="text-right">
-                      <div class="table-action-group">
-                        @if (store.status.toLowerCase() !== 'approved') {
-                          <button class="approve-action-btn" (click)="updateVendorStatus(store.id, 'Approved', true)" title="Approve and verify vendor">
-                            ✓ Approve
-                          </button>
-                        }
-                        @if (store.status.toLowerCase() === 'approved') {
-                          <button class="suspend-action-btn" (click)="updateVendorStatus(store.id, 'Suspended', false)" title="Suspend vendor store">
-                            ⏸ Suspend
-                          </button>
-                        }
-                        @if (store.status.toLowerCase() === 'pending') {
-                          <button class="reject-action-btn" (click)="updateVendorStatus(store.id, 'Rejected', false)" title="Reject application">
-                            ✕ Reject
-                          </button>
-                        }
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
+        <p-table 
+          [value]="vendors()" 
+          [loading]="loadingVendors()" 
+          [paginator]="true" 
+          [rows]="10" 
+          [rowsPerPageOptions]="[10, 20, 50]"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-sm">
+          <ng-template #header>
+            <tr>
+              <th>Store</th>
+              <th>Tax / Business ID</th>
+              <th>Commission</th>
+              <th>Status</th>
+              <th>Verification</th>
+              <th>Registered</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-store>
+            <tr>
+              <td>
+                <div class="store-cell">
+                  <div class="avatar-circle store-avatar">
+                    <i class="pi pi-shop"></i>
+                  </div>
+                  <div>
+                    <div class="user-name">{{ store.storeName }}</div>
+                    <div class="user-email">/store/{{ store.slug }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="phone-text">{{ store.taxNumber || '—' }}</span>
+              </td>
+              <td>
+                <span class="commission-pill">{{ store.commissionRate }}%</span>
+              </td>
+              <td>
+                <p-tag 
+                  [severity]="store.status.toLowerCase() === 'approved' ? 'success' : (store.status.toLowerCase() === 'pending' ? 'warn' : 'danger')" 
+                  [value]="store.status">
+                </p-tag>
+              </td>
+              <td>
+                <p-tag 
+                  [severity]="store.isVerified ? 'success' : 'secondary'" 
+                  [value]="store.isVerified ? 'Verified' : 'Unverified'"
+                  [icon]="store.isVerified ? 'pi pi-check' : undefined">
+                </p-tag>
+              </td>
+              <td>
+                <span class="date-text">{{ store.createdAtUtc | date:'mediumDate' }}</span>
+              </td>
+              <td class="text-right">
+                <div class="table-action-group">
+                  @if (store.status.toLowerCase() !== 'approved') {
+                    <p-button 
+                      label="Approve" 
+                      icon="pi pi-check" 
+                      size="small" 
+                      severity="success"
+                      (onClick)="updateVendorStatus(store.id, 'Approved', true)">
+                    </p-button>
+                  }
+                  @if (store.status.toLowerCase() === 'approved') {
+                    <p-button 
+                      label="Suspend" 
+                      icon="pi pi-pause" 
+                      size="small" 
+                      severity="secondary"
+                      [outlined]="true"
+                      (onClick)="updateVendorStatus(store.id, 'Suspended', false)">
+                    </p-button>
+                  }
+                  @if (store.status.toLowerCase() === 'pending') {
+                    <p-button 
+                      label="Reject" 
+                      icon="pi pi-times" 
+                      size="small" 
+                      severity="danger"
+                      [outlined]="true"
+                      (onClick)="updateVendorStatus(store.id, 'Rejected', false)">
+                    </p-button>
+                  }
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="7" class="text-center py-8 text-slate-500">
+                <i class="pi pi-shop text-3xl mb-2 block"></i>
+                No vendor stores found.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   }
@@ -316,7 +330,7 @@
       <div class="kpi-card">
         <div class="kpi-header">
           <span>Marketplace GMV</span>
-          <span class="kpi-trend trend-purple">+24.8% MoM</span>
+          <p-tag severity="info" value="+24.8% MoM"></p-tag>
         </div>
         <div class="kpi-value">$1,420,850</div>
         <p class="kpi-subtext">Platform Commission: $120,772.25</p>
@@ -324,8 +338,8 @@
 
       <div class="kpi-card">
         <div class="kpi-header">
-          <span>Onboarded Merchants</span>
-          <span class="kpi-trend trend-emerald">{{ pendingStores.length }} Pending</span>
+          <span>Active Vendors</span>
+          <p-tag severity="warn" [value]="pendingStores.length + ' Pending'"></p-tag>
         </div>
         <div class="kpi-value">{{ totalVendors() }}</div>
         <p class="kpi-subtext">Live vendor stores registered</p>
@@ -334,19 +348,19 @@
       <div class="kpi-card">
         <div class="kpi-header">
           <span>Customer Accounts</span>
-          <span class="kpi-trend trend-indigo">{{ totalUsers() }} Registered</span>
+          <p-tag severity="secondary" [value]="totalUsers() + ' Total'"></p-tag>
         </div>
         <div class="kpi-value">{{ totalUsers() }}</div>
-        <p class="kpi-subtext">Registered user accounts</p>
+        <p class="kpi-subtext">Registered customer accounts</p>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-header">
-          <span>System Roles Available</span>
-          <span class="kpi-trend trend-emerald">Configured</span>
+          <span>Configured Roles</span>
+          <p-tag severity="success" value="Active"></p-tag>
         </div>
         <div class="kpi-value">{{ roles().length }}</div>
-        <p class="kpi-subtext">Active access profiles</p>
+        <p class="kpi-subtext">Access control profiles</p>
       </div>
     </div>
 
@@ -356,16 +370,14 @@
         <div class="panel-header">
           <div>
             <h3 class="panel-title">Pending Merchant Applications</h3>
-            <p class="panel-subtitle">Review business legitimacy before granting Vendor role</p>
+            <p class="panel-subtitle">Review store details before granting seller permissions</p>
           </div>
-          <span class="pending-pill">{{ pendingStores.length }} Pending</span>
+          <p-tag severity="warn" [value]="pendingStores.length + ' Pending'"></p-tag>
         </div>
 
         <div class="applications-list">
           @if (pendingStores.length === 0) {
-            <div class="empty-state" style="padding: 24px;">
-              <span class="empty-icon">✓</span>
-              <h3>All Caught Up</h3>
+            <div class="empty-state" style="padding: 32px 24px;">
               <p>No vendor applications currently pending review.</p>
             </div>
           } @else {
@@ -378,8 +390,8 @@
                 </div>
 
                 <div class="action-btns">
-                  <button class="approve-btn" (click)="updateVendorStatus(app.id, 'Approved', true)">Approve</button>
-                  <button class="review-btn" (click)="updateVendorStatus(app.id, 'Rejected', false)">Reject</button>
+                  <p-button label="Approve" icon="pi pi-check" size="small" severity="success" (onClick)="updateVendorStatus(app.id, 'Approved', true)"></p-button>
+                  <p-button label="Reject" icon="pi pi-times" size="small" severity="danger" [outlined]="true" (onClick)="updateVendorStatus(app.id, 'Rejected', false)"></p-button>
                 </div>
               </div>
             }
@@ -389,84 +401,76 @@
     </div>
   }
 
-  <!-- ================= ROLE ASSIGNMENT MODAL ================= -->
-  @if (selectedUser()) {
-    <div class="modal-backdrop" (click)="closeRoleModal()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
+  <!-- ================= ROLE ASSIGNMENT MODAL USING P-DIALOG ================= -->
+  <p-dialog 
+    [visible]="!!selectedUser()" 
+    [modal]="true" 
+    [closable]="true" 
+    (onHide)="closeRoleModal()"
+    header="Manage User Roles" 
+    [style]="{ width: '520px', maxWidth: '90vw' }">
+    
+    @if (selectedUser()) {
+      <div class="modal-user-summary">
+        <div class="modal-avatar">
+          {{ getInitials(selectedUser()!.firstName, selectedUser()!.lastName) }}
+        </div>
+        <div>
+          <div class="modal-user-name">{{ selectedUser()!.firstName }} {{ selectedUser()!.lastName }}</div>
+          <div class="modal-user-email">{{ selectedUser()!.email }}</div>
+          <div class="modal-user-id">ID: {{ selectedUser()!.id }}</div>
+        </div>
+      </div>
+
+      <!-- Feedback Alert -->
+      @if (modalFeedback()) {
+        <div class="modal-alert" [class.alert-success]="modalFeedback()!.type === 'success'" [class.alert-error]="modalFeedback()!.type === 'error'">
+          {{ modalFeedback()!.message }}
+        </div>
+      }
+
+      <!-- Roles Toggle Grid -->
+      <div class="roles-selection-section">
+        <h4 class="roles-heading">Available System Roles</h4>
         
-        <div class="modal-header">
-          <div>
-            <h3 class="modal-title">Manage User Roles</h3>
-            <p class="modal-subtitle">Assign or revoke system privileges for this account</p>
-          </div>
-          <button class="close-btn" (click)="closeRoleModal()">✕</button>
-        </div>
-
-        <div class="modal-user-summary">
-          <div class="modal-avatar">
-            {{ getInitials(selectedUser()!.firstName, selectedUser()!.lastName) }}
-          </div>
-          <div>
-            <div class="modal-user-name">{{ selectedUser()!.firstName }} {{ selectedUser()!.lastName }}</div>
-            <div class="modal-user-email">{{ selectedUser()!.email }}</div>
-            <div class="modal-user-id">User ID: {{ selectedUser()!.id }}</div>
-          </div>
-        </div>
-
-        <!-- Feedback Alert -->
-        @if (modalFeedback()) {
-          <div class="modal-alert" [class.alert-success]="modalFeedback()!.type === 'success'" [class.alert-error]="modalFeedback()!.type === 'error'">
-            {{ modalFeedback()!.message }}
+        @if (modalLoading()) {
+          <div class="modal-spinner-wrapper">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Updating role assignment...</span>
           </div>
         }
 
-        <!-- Roles Toggle Grid -->
-        <div class="roles-selection-section">
-          <h4 class="roles-heading">Available System Roles</h4>
-          
-          @if (modalLoading()) {
-            <div class="modal-spinner-wrapper">
-              <div class="spinner"></div>
-              <span>Processing role update...</span>
+        <div class="roles-list-grid">
+          @for (role of roles(); track role.id) {
+            <div class="role-card" [class.assigned]="hasRole(role.name)">
+              <div class="role-info">
+                <div class="role-title-row">
+                  <span class="role-name-text">{{ role.name }}</span>
+                  @if (hasRole(role.name)) {
+                    <p-tag severity="success" value="Assigned"></p-tag>
+                  }
+                </div>
+                <p class="role-desc">{{ role.description || 'System access role' }}</p>
+              </div>
+
+              <p-button 
+                [label]="hasRole(role.name) ? 'Revoke' : 'Assign'"
+                [icon]="hasRole(role.name) ? 'pi pi-times' : 'pi pi-plus'"
+                [severity]="hasRole(role.name) ? 'danger' : 'primary'"
+                [outlined]="hasRole(role.name)"
+                size="small"
+                [disabled]="modalLoading()"
+                (onClick)="toggleRole(role)">
+              </p-button>
             </div>
           }
-
-          <div class="roles-list-grid">
-            @for (role of roles(); track role.id) {
-              <div class="role-card" [class.assigned]="hasRole(role.name)">
-                <div class="role-info">
-                  <div class="role-title-row">
-                    <span class="role-name-text">{{ role.name }}</span>
-                    @if (hasRole(role.name)) {
-                      <span class="active-badge">Assigned</span>
-                    }
-                  </div>
-                  <p class="role-desc">{{ role.description || 'System access role' }}</p>
-                </div>
-
-                <button 
-                  class="role-toggle-btn"
-                  [class.btn-revoke]="hasRole(role.name)"
-                  [class.btn-assign]="!hasRole(role.name)"
-                  [disabled]="modalLoading()"
-                  (click)="toggleRole(role)">
-                  @if (hasRole(role.name)) {
-                    Revoke Role
-                  } @else {
-                    + Assign Role
-                  }
-                </button>
-              </div>
-            }
-          </div>
         </div>
-
-        <div class="modal-footer">
-          <button class="done-btn" (click)="closeRoleModal()">Done</button>
-        </div>
-
       </div>
-    </div>
-  }
+    }
+
+    <ng-template #footer>
+      <p-button label="Done" (onClick)="closeRoleModal()" size="small"></p-button>
+    </ng-template>
+  </p-dialog>
 
 </div>

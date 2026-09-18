@@ -4,10 +4,8 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
+  background-color: $bg-card;
   border-bottom: 1px solid $border-color;
-  transition: all $transition-normal;
 
   .navbar-container {
     max-width: 1280px;
@@ -18,15 +16,11 @@
       padding: 0 24px;
     }
 
-    @media (min-width: 1024px) {
-      padding: 0 32px;
-    }
-
     .navbar-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      height: 60px;
     }
   }
 
@@ -42,27 +36,19 @@
       gap: 10px;
       text-decoration: none;
 
-      &:hover {
-        .brand-icon {
-          transform: scale(1.05);
-        }
-      }
-
       .brand-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: $radius-md;
-        background: linear-gradient(135deg, $color-brand-dark, $color-brand, $color-indigo);
+        width: 32px;
+        height: 32px;
+        border-radius: $radius-sm;
+        background-color: $color-brand;
         display: flex;
         align-items: center;
         justify-content: center;
         color: $text-white;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
-        transition: transform $transition-fast;
 
         .icon-svg {
-          width: 24px;
-          height: 24px;
+          width: 18px;
+          height: 18px;
         }
       }
 
@@ -71,21 +57,19 @@
         flex-direction: column;
 
         .brand-title {
-          font-size: 20px;
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          background: linear-gradient(90deg, #0f172a, #3730a3, #4f46e5);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          font-size: 17px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: $text-primary;
         }
 
         .brand-subtitle {
           font-size: 10px;
           font-weight: 500;
-          color: $text-light;
+          color: $text-muted;
           text-transform: uppercase;
-          letter-spacing: 0.08em;
-          margin-top: -3px;
+          letter-spacing: 0.05em;
+          margin-top: -2px;
         }
       }
     }
@@ -95,22 +79,23 @@
   .nav-links-desktop {
     display: none;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 
     @media (min-width: 768px) {
       display: flex;
     }
 
     .nav-link {
-      padding: 8px 14px;
-      border-radius: $radius-sm;
-      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: $radius-xs;
+      font-size: 13px;
+      font-weight: 500;
       color: $text-secondary;
       text-decoration: none;
       transition: all $transition-fast;
 
       &:hover {
-        color: $color-brand;
+        color: $text-primary;
         background-color: $bg-subtle;
       }
 
@@ -126,29 +111,20 @@
         gap: 6px;
 
         .status-indicator {
-          width: 8px;
-          height: 8px;
+          width: 6px;
+          height: 6px;
           border-radius: $radius-full;
-
-          &.seller {
-            background-color: $color-indigo;
-          }
+          background-color: $color-brand;
 
           &.admin {
-            background-color: $color-purple;
+            background-color: #64748b;
           }
         }
       }
 
-      &.active-seller {
-        background-color: #eef2ff;
-        color: #4338ca;
-        font-weight: 600;
-      }
-
-      &.active-admin {
-        background-color: #faf5ff;
-        color: #7e22ce;
+      &.active-portal {
+        background-color: $bg-subtle;
+        color: $text-primary;
         font-weight: 600;
       }
     }
@@ -167,8 +143,8 @@
     .user-profile-section {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding-left: 14px;
+      gap: 10px;
+      padding-left: 12px;
       border-left: 1px solid $border-color;
 
       .user-info {
@@ -187,38 +163,37 @@
           align-items: center;
           justify-content: flex-end;
           gap: 4px;
-          margin-top: 2px;
 
           .role-badge {
             font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 700;
-            padding: 2px 6px;
+            font-weight: 500;
+            padding: 1px 5px;
             border-radius: $radius-xs;
-            background-color: $color-brand-subtle;
-            color: $color-brand-dark;
+            background-color: $bg-subtle;
+            color: $text-secondary;
+            border: 1px solid $border-color;
           }
         }
       }
 
       .avatar-circle {
-        width: 36px;
-        height: 36px;
+        width: 30px;
+        height: 30px;
         border-radius: $radius-full;
-        background-color: $bg-subtle;
-        border: 1px solid $border-color;
+        background-color: $color-brand-light;
+        border: 1px solid $color-brand-subtle;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        color: $text-secondary;
-        font-size: 14px;
+        font-weight: 600;
+        color: $color-brand;
+        font-size: 13px;
       }
 
       .signout-button {
-        padding: 8px;
-        border-radius: $radius-sm;
-        color: $text-light;
+        padding: 6px;
+        border-radius: $radius-xs;
+        color: $text-muted;
         background: transparent;
         border: none;
         cursor: pointer;
@@ -230,55 +205,50 @@
         }
 
         .signout-icon {
-          width: 20px;
-          height: 20px;
+          width: 18px;
+          height: 18px;
         }
       }
     }
 
     .guest-signin-link {
-      padding: 8px 16px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       color: $text-secondary;
       text-decoration: none;
-      transition: color $transition-fast;
+      padding: 6px 10px;
 
       &:hover {
-        color: $color-brand;
+        color: $text-primary;
       }
     }
 
-    .guest-seller-btn {
-      padding: 8px 14px;
+    .guest-seller-link {
       font-size: 13px;
       font-weight: 500;
       color: $color-brand;
-      background-color: $color-brand-light;
-      border: 1px solid $color-brand-subtle;
-      border-radius: $radius-sm;
       text-decoration: none;
-      transition: background-color $transition-fast;
+      padding: 6px 10px;
 
       &:hover {
-        background-color: $color-brand-subtle;
+        text-decoration: underline;
       }
     }
 
     .guest-register-btn {
-      padding: 8px 16px;
+      padding: 6px 14px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       color: $text-white;
       background-color: $color-brand;
-      border-radius: $radius-sm;
+      border: 1px solid $color-brand-hover;
+      border-radius: $radius-xs;
       box-shadow: $shadow-button;
       text-decoration: none;
-      transition: background-color $transition-fast, transform $transition-fast;
+      transition: background-color $transition-fast;
 
       &:hover {
         background-color: $color-brand-hover;
-        transform: translateY(-1px);
       }
     }
   }
@@ -293,8 +263,8 @@
     }
 
     .mobile-menu-toggle {
-      padding: 8px;
-      border-radius: $radius-sm;
+      padding: 6px;
+      border-radius: $radius-xs;
       color: $text-secondary;
       background: transparent;
       border: none;
@@ -305,8 +275,8 @@
       }
 
       .menu-icon {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
       }
     }
   }
@@ -315,10 +285,10 @@
   .mobile-dropdown {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     background-color: $bg-card;
     border-bottom: 1px solid $border-color;
-    padding: 12px 16px 16px 16px;
+    padding: 12px 16px;
 
     @media (min-width: 768px) {
       display: none;
@@ -326,9 +296,9 @@
 
     .mobile-link {
       display: block;
-      padding: 8px 12px;
-      border-radius: $radius-sm;
-      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: $radius-xs;
+      font-size: 13px;
       font-weight: 500;
       color: $text-primary;
       text-decoration: none;
@@ -336,38 +306,22 @@
       &:hover {
         background-color: $bg-subtle;
       }
-
-      &.seller {
-        color: $color-indigo;
-
-        &:hover {
-          background-color: $color-indigo-light;
-        }
-      }
-
-      &.admin {
-        color: $color-purple;
-
-        &:hover {
-          background-color: $color-purple-light;
-        }
-      }
     }
 
     .mobile-user-section {
-      padding-top: 12px;
-      margin-top: 8px;
+      padding-top: 10px;
+      margin-top: 6px;
       border-top: 1px solid $border-color;
 
       .mobile-auth-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 6px 12px;
+        padding: 6px 10px;
 
         .mobile-user-email {
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 500;
           color: $text-primary;
         }
 
@@ -385,14 +339,14 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-        padding-top: 6px;
+        padding-top: 4px;
 
         .mobile-btn-secondary {
           display: block;
           text-align: center;
-          padding: 8px 16px;
+          padding: 7px 12px;
           border: 1px solid $border-color;
-          border-radius: $radius-sm;
+          border-radius: $radius-xs;
           font-size: 13px;
           font-weight: 500;
           color: $text-primary;
@@ -402,12 +356,12 @@
         .mobile-btn-primary {
           display: block;
           text-align: center;
-          padding: 8px 16px;
+          padding: 7px 12px;
           background-color: $color-brand;
           color: $text-white;
-          border-radius: $radius-sm;
+          border-radius: $radius-xs;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 500;
           text-decoration: none;
         }
       }

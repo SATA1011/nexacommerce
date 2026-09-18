@@ -1,6 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { SelectModule } from 'primeng/select';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService, UserWithRoles } from '../../../core/services/admin.service';
 import { VendorService, StoreResponse } from '../../../core/services/vendor.service';
@@ -9,7 +15,16 @@ import { RoleResponse } from '../../../core/models/auth.models';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    TagModule,
+    DialogModule,
+    SelectModule
+  ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -46,6 +61,14 @@ export class AdminDashboardComponent implements OnInit {
   vendorSearchTerm = '';
   vendorStatusFilter = '';
   vendorActionFeedback = signal<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  statusOptions = [
+    { label: 'All Statuses', value: '' },
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Rejected', value: 'Rejected' },
+    { label: 'Suspended', value: 'Suspended' }
+  ];
 
   // Overview metrics
   get pendingStores(): StoreResponse[] {

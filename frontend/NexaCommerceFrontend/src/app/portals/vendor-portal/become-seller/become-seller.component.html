@@ -9,9 +9,9 @@
             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       </div>
-      <h1 class="page-title">Open Your Store on NexaCommerce</h1>
+      <h1 class="page-title">Register as a Seller</h1>
       <p class="page-subtitle">
-        Join verified merchants selling products across the globe. Fill in your details below to submit your store for review.
+        Open your storefront on NexaCommerce. Submit your merchant profile below for review.
       </p>
     </div>
 
@@ -46,13 +46,13 @@
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span>
-              Signed in as <strong>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</strong> ({{ authService.currentUser()?.email }}). Your account will be upgraded to a Seller once approved.
+              Signed in as <strong>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</strong> ({{ authService.currentUser()?.email }}). Your account will receive seller access once approved.
             </span>
           </div>
         } @else {
           <!-- GUEST ACCOUNT DETAILS -->
           <div class="section-divider">
-            <span class="section-title">1. Your Seller Account</span>
+            <span class="section-title">1. Account Information</span>
           </div>
 
           <div class="form-grid">
@@ -109,7 +109,7 @@
           </div>
 
           <div class="section-divider">
-            <span class="section-title">2. Store & Business Profile</span>
+            <span class="section-title">2. Store Information</span>
           </div>
         }
 
@@ -123,12 +123,12 @@
                  required
                  placeholder="e.g. Apex Electronics Co."
                  class="form-input" />
-          <p class="form-hint">This is your public brand name visible to buyers.</p>
+          <p class="form-hint">Public brand name displayed to shoppers.</p>
         </div>
 
         <!-- Slug -->
         <div class="form-group">
-          <label class="form-label">Store URL / Slug <span class="required">*</span></label>
+          <label class="form-label">Store URL <span class="required">*</span></label>
           <div class="slug-wrapper">
             <span class="slug-prefix">nexacommerce.com/store/</span>
             <input type="text"
@@ -138,13 +138,12 @@
                    placeholder="apex-electronics"
                    class="form-input slug-input" />
           </div>
-          <p class="form-hint">Auto-generated from store name. Only lowercase letters, numbers, and hyphens.</p>
         </div>
 
         <!-- Tax Number & Business Address -->
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">GST / VAT / Tax ID <span class="optional">(Optional)</span></label>
+            <label class="form-label">Tax / Business ID <span class="optional">(Optional)</span></label>
             <input type="text"
                    [(ngModel)]="taxNumber"
                    name="taxNumber"
@@ -167,7 +166,7 @@
           <textarea [(ngModel)]="description"
                     name="description"
                     rows="3"
-                    placeholder="Tell buyers what makes your store and products unique..."
+                    placeholder="Brief description of your store and catalog..."
                     class="form-input form-textarea"></textarea>
         </div>
 
@@ -177,11 +176,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           <div>
-            <p class="info-title">What happens after submission?</p>
+            <p class="info-title">Review Process</p>
             <ul class="info-list">
-              <li>Your store application is created in <strong>Pending Review</strong> status.</li>
-              <li>An admin reviews your application within 24 to 72 hours.</li>
-              <li>Once <strong>Approved</strong>, you can sign in to the <strong>Seller Studio</strong> and list products.</li>
+              <li>Your store application is submitted in <strong>Pending</strong> status.</li>
+              <li>An administrator reviews your application.</li>
+              <li>Once approved, you can access the <strong>Seller Studio</strong> and list products.</li>
             </ul>
           </div>
         </div>
@@ -194,19 +193,16 @@
               <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            <span>Submitting Application...</span>
+            <span>Submitting application...</span>
           } @else {
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            <span>{{ isAuthenticated() ? 'Submit Store Application' : 'Create Seller Account & Store' }}</span>
+            <span>{{ isAuthenticated() ? 'Submit Store Application' : 'Register Seller Account' }}</span>
           }
         </button>
 
         @if (!isAuthenticated()) {
-          <div style="text-align: center; font-size: 0.875rem; color: #64748b; margin-top: 6px;">
-            Already have a shopper account?
-            <a routerLink="/auth/login" [queryParams]="{returnUrl: '/vendor/become-seller'}" style="color: #4f46e5; font-weight: 600; text-decoration: underline;">
+          <div class="seller-signin-footer">
+            Already have an account?
+            <a routerLink="/auth/login" [queryParams]="{returnUrl: '/vendor/become-seller'}" class="signin-link">
               Sign in first
             </a>
           </div>

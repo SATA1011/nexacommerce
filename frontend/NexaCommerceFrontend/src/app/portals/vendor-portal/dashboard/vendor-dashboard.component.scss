@@ -3,29 +3,28 @@
 .vendor-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 28px 16px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 
   @media (min-width: 640px) {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 32px 24px;
   }
 
   // Status Alert Banners
   .status-banner {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border-radius: $radius-lg;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: $radius-md;
     background: $bg-card;
     border: 1px solid $border-color;
     box-shadow: $shadow-card;
 
     .banner-icon {
-      font-size: 24px;
+      font-size: 20px;
       flex-shrink: 0;
     }
 
@@ -33,66 +32,81 @@
       flex: 1;
 
       h4 {
-        margin: 0 0 4px 0;
-        font-size: 15px;
-        font-weight: 700;
+        margin: 0 0 3px 0;
+        font-size: 14px;
+        font-weight: 600;
         color: $text-primary;
       }
 
       p {
         margin: 0;
         font-size: 13px;
-        color: $text-secondary;
+        color: $text-muted;
         line-height: 1.5;
 
         strong {
-          color: $text-primary;
+          color: $text-secondary;
         }
 
         .banner-link {
           color: $color-brand;
-          font-weight: 600;
+          font-weight: 500;
           text-decoration: underline;
         }
       }
     }
 
-    &.banner-pending {
-      background: rgba(245, 158, 11, 0.08);
-      border-color: rgba(245, 158, 11, 0.3);
+    .status-pill {
+      padding: 3px 10px;
+      border-radius: $radius-full;
+      font-size: 11px;
+      font-weight: 600;
 
-      h4 { color: #d97706; }
+      &.pill-pending {
+        background: #fffbeb;
+        color: #92400e;
+        border: 1px solid #fef3c7;
+      }
+
+      &.pill-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+    }
+
+    &.banner-pending {
+      background: #fffdf5;
+      border-color: #fef3c7;
+
+      h4 { color: #92400e; }
     }
 
     &.banner-warning {
-      background: rgba(79, 70, 229, 0.08);
-      border-color: rgba(79, 70, 229, 0.3);
+      background: #eff6ff;
+      border-color: #dbeafe;
 
-      h4 { color: $color-brand; }
+      h4 { color: #1e40af; }
     }
 
     &.banner-danger {
-      background: rgba(239, 68, 68, 0.08);
-      border-color: rgba(239, 68, 68, 0.3);
+      background: #fef2f2;
+      border-color: #fecaca;
 
-      h4 { color: #dc2626; }
+      h4 { color: #991b1b; }
     }
   }
 
-  // Merchant Portal Banner
-  .merchant-banner {
-    background: linear-gradient(135deg, #312e81 0%, #3730a3 50%, #0f172a 100%);
-    border-radius: $radius-xl;
+  // Merchant Portal Header Card
+  .merchant-header-card {
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: $radius-lg;
     padding: 24px;
-    color: $text-white;
     box-shadow: $shadow-card;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-
-    @media (min-width: 640px) {
-      padding: 32px;
-    }
+    gap: 16px;
 
     @media (min-width: 768px) {
       flex-direction: row;
@@ -100,97 +114,110 @@
       justify-content: space-between;
     }
 
-    .merchant-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+    .header-main {
+      .merchant-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
 
-      .merchant-badge {
-        padding: 2px 10px;
-        border-radius: $radius-full;
-        background-color: rgba(99, 102, 241, 0.3);
-        border: 1px solid rgba(129, 140, 248, 0.4);
-        color: #c7d2fe;
-        font-size: 12px;
-        font-weight: 600;
+        .merchant-badge {
+          padding: 2px 8px;
+          border-radius: $radius-xs;
+          font-size: 11px;
+          font-weight: 500;
+          background-color: $bg-subtle;
+          color: $text-secondary;
+          border: 1px solid $border-color;
 
-        &.badge-verified {
-          background-color: rgba(16, 185, 129, 0.25);
-          border-color: rgba(16, 185, 129, 0.5);
-          color: #a7f3d0;
+          &.badge-verified {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #166534;
+          }
+
+          &.badge-pending {
+            background-color: #fffbeb;
+            border-color: #fef3c7;
+            color: #92400e;
+          }
         }
 
-        &.badge-pending {
-          background-color: rgba(245, 158, 11, 0.25);
-          border-color: rgba(245, 158, 11, 0.5);
-          color: #fde68a;
+        .commission-rate {
+          font-size: 12px;
+          color: $text-muted;
         }
       }
 
-      .commission-rate {
-        font-size: 12px;
-        color: #a5b4fc;
-      }
-    }
-
-    .banner-title {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -0.025em;
-      margin: 0;
-
-      @media (min-width: 640px) {
-        font-size: 28px;
-      }
-    }
-
-    .banner-subtitle {
-      font-size: 13px;
-      color: #c7d2fe;
-      margin-top: 4px;
-
-      .store-name {
-        font-weight: 600;
-        color: $text-white;
-      }
-    }
-
-    .banner-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      .new-listing-btn {
-        padding: 10px 16px;
-        background-color: $color-indigo;
-        color: $text-white;
-        font-size: 12px;
+      .header-title {
+        font-size: 22px;
         font-weight: 700;
-        border-radius: $radius-md;
-        border: none;
-        cursor: pointer;
-        box-shadow: $shadow-sm;
-        transition: background-color $transition-fast;
+        letter-spacing: -0.02em;
+        color: $text-primary;
+        margin: 0;
 
-        &:hover {
-          background-color: $color-brand;
+        @media (min-width: 640px) {
+          font-size: 24px;
         }
       }
 
-      .live-store-link {
-        padding: 10px 16px;
-        background-color: rgba(255, 255, 255, 0.1);
+      .header-subtitle {
+        font-size: 13px;
+        color: $text-muted;
+        margin-top: 4px;
+
+        .store-name {
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        .store-slug {
+          color: $text-light;
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .btn-primary {
+        padding: 8px 16px;
+        background-color: $color-brand;
         color: $text-white;
-        font-size: 12px;
-        font-weight: 600;
-        border-radius: $radius-md;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: $radius-sm;
+        border: 1px solid $color-brand-hover;
+        cursor: pointer;
+        box-shadow: $shadow-button;
         transition: background-color $transition-fast;
 
+        &:hover:not(:disabled) {
+          background-color: $color-brand-hover;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .btn-secondary {
+        padding: 8px 16px;
+        background-color: $bg-card;
+        color: $text-secondary;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: $radius-sm;
+        border: 1px solid $border-color;
+        text-decoration: none;
+        transition: all $transition-fast;
+
         &:hover {
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: $bg-subtle;
+          color: $text-primary;
         }
       }
     }
@@ -200,7 +227,7 @@
   .kpi-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 14px;
 
     @media (min-width: 640px) {
       grid-template-columns: repeat(2, 1fr);
@@ -211,11 +238,11 @@
     }
 
     .kpi-card {
-      padding: 24px;
+      padding: 16px 18px;
       background-color: $bg-card;
-      border-radius: $radius-lg;
+      border-radius: $radius-md;
       border: 1px solid $border-color;
-      box-shadow: $shadow-soft;
+      box-shadow: $shadow-card;
 
       .kpi-header {
         display: flex;
@@ -223,48 +250,53 @@
         justify-content: space-between;
         color: $text-muted;
         font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        font-weight: 500;
 
         .kpi-trend {
-          padding: 2px 8px;
-          border-radius: $radius-full;
+          padding: 1px 6px;
+          border-radius: $radius-xs;
           font-size: 11px;
+          font-weight: 500;
+          border: 1px solid transparent;
 
           &.trend-up {
             color: $color-success-text;
             background-color: $color-success-bg;
+            border-color: $color-success-border;
           }
 
           &.trend-warn {
             color: $color-warning-text;
             background-color: $color-warning-bg;
+            border-color: $color-warning-border;
           }
 
           &.trend-info {
-            color: #3730a3;
-            background-color: #eef2ff;
+            color: #1e40af;
+            background-color: #eff6ff;
+            border-color: #dbeafe;
           }
 
           &.trend-brand {
-            color: #312e81;
-            background-color: #e0e7ff;
+            color: $text-secondary;
+            background-color: $bg-subtle;
+            border-color: $border-color;
           }
         }
       }
 
       .kpi-value {
-        font-size: 28px;
-        font-weight: 900;
+        font-size: 22px;
+        font-weight: 700;
         color: $text-primary;
-        margin-top: 12px;
+        margin-top: 8px;
       }
 
       .kpi-subtext {
         font-size: 12px;
-        color: $text-light;
+        color: $text-muted;
         margin-top: 4px;
+        margin-bottom: 0;
       }
     }
   }
@@ -272,17 +304,17 @@
   // Products Table Container
   .table-container {
     background-color: $bg-card;
-    border-radius: $radius-xl;
+    border-radius: $radius-md;
     border: 1px solid $border-color;
-    box-shadow: $shadow-soft;
+    box-shadow: $shadow-card;
     overflow: hidden;
 
     .table-header {
-      padding: 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid $border-color;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
 
       @media (min-width: 640px) {
         flex-direction: row;
@@ -291,8 +323,8 @@
       }
 
       .table-title {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 600;
         color: $text-primary;
         margin: 0;
       }
@@ -306,14 +338,14 @@
       .filter-tabs {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
 
         .tab-btn {
-          padding: 6px 12px;
+          padding: 5px 12px;
           font-size: 12px;
           font-weight: 500;
-          border-radius: $radius-sm;
-          border: none;
+          border-radius: $radius-xs;
+          border: 1px solid transparent;
           background: transparent;
           color: $text-muted;
           cursor: pointer;
@@ -321,11 +353,13 @@
 
           &:hover {
             background-color: $bg-subtle;
+            color: $text-primary;
           }
 
           &.active {
-            background-color: $bg-subtle;
-            color: $text-primary;
+            background-color: $color-brand-light;
+            color: $color-brand;
+            border-color: $color-brand-subtle;
             font-weight: 600;
           }
         }
@@ -338,21 +372,21 @@
       .data-table {
         width: 100%;
         text-align: left;
-        font-size: 14px;
+        font-size: 13px;
         color: $text-secondary;
         border-collapse: collapse;
 
         .table-head {
-          background-color: $bg-body;
-          color: $text-light;
+          background-color: $bg-subtle;
+          color: $text-secondary;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          font-weight: 700;
+          font-weight: 600;
           border-bottom: 1px solid $border-color;
 
           .cell-head {
-            padding: 16px 24px;
+            padding: 10px 18px;
 
             &.text-right {
               text-align: right;
@@ -366,11 +400,11 @@
             transition: background-color $transition-fast;
 
             &:hover {
-              background-color: rgba(248, 250, 252, 0.8);
+              background-color: $bg-subtle;
             }
 
             .cell-data {
-              padding: 16px 24px;
+              padding: 12px 18px;
 
               &.text-right {
                 text-align: right;
@@ -391,10 +425,11 @@
 
               &.category-cell {
                 font-size: 12px;
+                color: $text-muted;
               }
 
               &.price-cell {
-                font-weight: 700;
+                font-weight: 600;
                 color: $text-primary;
               }
 
@@ -403,43 +438,45 @@
 
                 .low-stock {
                   color: $color-danger;
-                  font-weight: 700;
+                  font-weight: 600;
                 }
               }
 
               .status-pill {
-                padding: 4px 10px;
-                border-radius: $radius-full;
+                padding: 2px 8px;
+                border-radius: $radius-xs;
                 font-size: 11px;
-                font-weight: 700;
+                font-weight: 500;
                 display: inline-block;
 
                 &.status-approved {
-                  background-color: $color-success-bg;
-                  color: $color-success-text;
+                  background-color: #f0fdf4;
+                  color: #166534;
+                  border: 1px solid #bbf7d0;
                 }
 
                 &.status-pending {
-                  background-color: $color-warning-bg;
-                  color: $color-warning-text;
+                  background-color: #fffbeb;
+                  color: #92400e;
+                  border: 1px solid #fef3c7;
                 }
 
                 &.status-draft {
                   background-color: $bg-subtle;
-                  color: $text-secondary;
+                  color: $text-muted;
+                  border: 1px solid $border-color;
                 }
               }
 
               .edit-btn {
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: 500;
                 color: $color-brand;
                 background: transparent;
                 border: none;
                 cursor: pointer;
 
                 &:hover {
-                  color: $color-brand-hover;
                   text-decoration: underline;
                 }
               }

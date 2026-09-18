@@ -1,16 +1,16 @@
 @use 'variables' as *;
 
 .footer {
-  background-color: $bg-dark;
-  color: $text-light;
-  font-size: 14px;
-  border-top: 1px solid $border-color-dark;
+  background-color: #0f172a;
+  color: #94a3b8;
+  font-size: 13px;
+  border-top: 1px solid #1e293b;
   margin-top: auto;
 
   .footer-container {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 48px 16px;
+    padding: 40px 16px 28px;
 
     @media (min-width: 640px) {
       padding-left: 24px;
@@ -29,7 +29,7 @@
     gap: 32px;
 
     @media (min-width: 768px) {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 2fr repeat(3, 1fr);
     }
   }
 
@@ -37,7 +37,7 @@
   .footer-brand-column {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 
     .brand-logo {
       display: flex;
@@ -45,46 +45,35 @@
       gap: 10px;
 
       .logo-badge {
-        width: 32px;
-        height: 32px;
-        border-radius: $radius-sm;
+        width: 28px;
+        height: 28px;
+        border-radius: $radius-xs;
         background-color: $color-brand;
         color: $text-white;
-        font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
+
+        .badge-icon {
+          width: 16px;
+          height: 16px;
+        }
       }
 
       .brand-name {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
-        color: $text-white;
+        color: #ffffff;
         letter-spacing: -0.02em;
       }
     }
 
     .brand-description {
-      font-size: 12px;
-      color: $text-light;
-      line-height: 1.6;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
       margin: 0;
-    }
-
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #34d399;
-
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: $radius-full;
-        background-color: #34d399;
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
+      max-width: 320px;
     }
   }
 
@@ -93,10 +82,10 @@
     .nav-title {
       font-size: 12px;
       font-weight: 600;
-      color: #e2e8f0;
+      color: #f1f5f9;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin: 0 0 16px 0;
+      margin: 0 0 12px 0;
     }
 
     .nav-list {
@@ -105,55 +94,34 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       font-size: 13px;
 
       .nav-link {
-        color: $text-light;
+        color: #94a3b8;
         text-decoration: none;
         transition: color $transition-fast;
 
         &:hover {
-          color: $text-white;
+          color: #ffffff;
         }
-      }
-
-      &.security-list span {
-        color: $text-muted;
       }
     }
   }
 
   // Footer Bottom Copyright
   .footer-bottom {
-    margin-top: 32px;
-    padding-top: 32px;
-    border-top: 1px solid $border-color-dark;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #1e293b;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
     font-size: 12px;
-    color: $text-muted;
-
-    @media (min-width: 640px) {
-      flex-direction: row;
-    }
+    color: #64748b;
 
     p {
       margin: 0;
     }
-
-    .platform-badge {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
   }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
 }

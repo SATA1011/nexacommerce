@@ -3,29 +3,30 @@
   <!-- Catalog Header -->
   <div class="catalog-header">
     <div class="header-titles">
-      <h1 class="catalog-title">Marketplace Catalog</h1>
-      <p class="catalog-subtitle">Browse approved listings from verified platform merchants</p>
+      <h1 class="catalog-title">Explore Products</h1>
+      <p class="catalog-subtitle">Browse catalog listings from verified platform merchants</p>
     </div>
 
     <div class="controls-group">
       <!-- Search input -->
       <div class="search-box">
-        <input type="text"
-               [(ngModel)]="searchQuery"
-               placeholder="Search products, brands..."
-               class="search-input" />
-        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+        <i class="pi pi-search search-icon"></i>
+        <input 
+          pInputText
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search products, brands..."
+          class="search-input" />
       </div>
 
       <!-- Sort selection -->
-      <select [(ngModel)]="sortBy" class="sort-select">
-        <option value="featured">Featured First</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="rating">Highest Rated</option>
-      </select>
+      <p-select 
+        [options]="sortOptions" 
+        [(ngModel)]="sortBy" 
+        optionLabel="label" 
+        optionValue="value"
+        styleClass="w-44 text-xs">
+      </p-select>
     </div>
   </div>
 
@@ -38,13 +39,15 @@
         <h3 class="filter-heading">Categories</h3>
         <div class="filter-options">
           @for (cat of filterCategories; track cat) {
-            <label class="filter-checkbox-label">
-              <input type="checkbox"
-                     [checked]="selectedCategory === cat"
-                     (change)="toggleCategory(cat)"
-                     class="checkbox-control" />
-              <span>{{ cat }}</span>
-            </label>
+            <div class="flex items-center gap-2">
+              <p-checkbox 
+                [binary]="true"
+                [ngModel]="selectedCategory === cat"
+                (ngModelChange)="toggleCategory(cat)"
+                [inputId]="'cat-' + cat">
+              </p-checkbox>
+              <label [for]="'cat-' + cat" class="text-xs text-slate-700 cursor-pointer">{{ cat }}</label>
+            </div>
           }
         </div>
 
@@ -53,19 +56,21 @@
           <div class="price-slider-group">
             <div class="price-display">
               <span>$0</span>
-              <span class="price-max">\${{ maxPrice }}</span>
+              <span class="price-max">${{ maxPrice }}</span>
             </div>
-            <input type="range" min="10" max="2000" [(ngModel)]="maxPrice"
-                   class="price-slider" />
+            <p-slider [(ngModel)]="maxPrice" [min]="10" [max]="2000"></p-slider>
           </div>
         </div>
 
         <div class="filter-divider">
-          <label class="stock-checkbox-label">
-            <input type="checkbox" [(ngModel)]="onlyInStock"
-                   class="checkbox-control" />
-            <span>In Stock Only</span>
-          </label>
+          <div class="flex items-center gap-2">
+            <p-checkbox 
+              [binary]="true" 
+              [(ngModel)]="onlyInStock" 
+              inputId="onlyInStock">
+            </p-checkbox>
+            <label for="onlyInStock" class="text-xs text-slate-700 cursor-pointer">In Stock Only</label>
+          </div>
         </div>
       </div>
     </aside>
@@ -74,7 +79,7 @@
     <main class="products-main">
       <div class="products-grid">
         @for (product of filteredProducts(); track product.id) {
-          <div class="product-card group">
+          <div class="product-card">
             
             <!-- Product Image Container -->
             <div class="product-media">
@@ -101,25 +106,25 @@
 
                 <!-- Ratings -->
                 <div class="rating-bar">
-                  <div class="stars">
-                    ★ ★ ★ ★ ★
-                  </div>
-                  <span class="rating-value">{{ product.rating }}</span>
+                  <p-rating [(ngModel)]="product.rating" [readonly]="true"></p-rating>
                   <span class="reviews-count">({{ product.reviewsCount }})</span>
                 </div>
               </div>
 
               <div class="product-bottom-row">
                 <div class="price-wrapper">
-                  <span class="current-price">\${{ product.price }}</span>
+                  <span class="current-price">${{ product.price }}</span>
                   @if (product.originalPrice) {
-                    <span class="original-price">\${{ product.originalPrice }}</span>
+                    <span class="original-price">${{ product.originalPrice }}</span>
                   }
                 </div>
 
-                <button class="add-to-cart-btn">
-                  Add to Cart
-                </button>
+                <p-button 
+                  label="Add" 
+                  icon="pi pi-shopping-cart" 
+                  size="small" 
+                  [outlined]="true">
+                </p-button>
               </div>
 
             </div>

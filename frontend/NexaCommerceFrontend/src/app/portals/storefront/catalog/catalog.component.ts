@@ -1,6 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SliderModule } from 'primeng/slider';
+import { RatingModule } from 'primeng/rating';
+import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
 import { CatalogService, ProductItem as ApiProductItem, CategoryItem } from '../../../core/services/catalog.service';
 
 interface DisplayProductItem {
@@ -20,7 +27,17 @@ interface DisplayProductItem {
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SliderModule,
+    RatingModule,
+    SelectModule,
+    CheckboxModule,
+    ButtonModule,
+    TagModule,
+    InputTextModule
+  ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.scss'
 })
@@ -36,6 +53,13 @@ export class CatalogComponent implements OnInit {
 
   filterCategories: string[] = ['Electronics', 'Computing', 'Audio & Sound', 'Wearables', 'Accessories'];
 
+  sortOptions = [
+    { label: 'Featured First', value: 'featured' },
+    { label: 'Price: Low to High', value: 'price-asc' },
+    { label: 'Price: High to Low', value: 'price-desc' },
+    { label: 'Highest Rated', value: 'rating' }
+  ];
+
   // Default fallback showcase products in case database has no approved vendor listings yet
   defaultProducts: DisplayProductItem[] = [
     {
@@ -45,7 +69,7 @@ export class CatalogComponent implements OnInit {
       category: 'Audio & Sound',
       price: 299.99,
       originalPrice: 349.99,
-      rating: 4.9,
+      rating: 5,
       reviewsCount: 142,
       imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80',
       badge: 'Best Seller',
@@ -58,7 +82,7 @@ export class CatalogComponent implements OnInit {
       category: 'Computing',
       price: 489.00,
       originalPrice: 529.00,
-      rating: 4.8,
+      rating: 5,
       reviewsCount: 88,
       imageUrl: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&auto=format&fit=crop&q=80',
       badge: 'Trending',
@@ -70,7 +94,7 @@ export class CatalogComponent implements OnInit {
       storeName: 'KeyCraft Studio',
       category: 'Accessories',
       price: 139.50,
-      rating: 4.7,
+      rating: 5,
       reviewsCount: 231,
       imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80',
       inStock: true
@@ -82,7 +106,7 @@ export class CatalogComponent implements OnInit {
       category: 'Wearables',
       price: 349.00,
       originalPrice: 399.00,
-      rating: 4.9,
+      rating: 5,
       reviewsCount: 76,
       imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80',
       badge: 'New Arrival',
@@ -94,7 +118,7 @@ export class CatalogComponent implements OnInit {
       storeName: 'KeyCraft Studio',
       category: 'Accessories',
       price: 69.99,
-      rating: 4.6,
+      rating: 4,
       reviewsCount: 119,
       imageUrl: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600&auto=format&fit=crop&q=80',
       inStock: true
@@ -106,7 +130,7 @@ export class CatalogComponent implements OnInit {
       category: 'Audio & Sound',
       price: 189.00,
       originalPrice: 219.00,
-      rating: 4.8,
+      rating: 5,
       reviewsCount: 304,
       imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80',
       badge: 'Popular',
@@ -149,7 +173,7 @@ export class CatalogComponent implements OnInit {
             category: p.categoryName || 'General',
             price: p.price,
             originalPrice: p.compareAtPrice,
-            rating: 4.9,
+            rating: 5,
             reviewsCount: 12,
             imageUrl: p.primaryImageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80',
             badge: 'Verified Seller',
@@ -157,7 +181,6 @@ export class CatalogComponent implements OnInit {
           }));
           this.products.set(mapped);
         } else {
-          // If no approved live products yet, show sample items filtered locally
           this.products.set(this.defaultProducts);
         }
       },
